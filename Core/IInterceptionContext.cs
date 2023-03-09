@@ -15,7 +15,7 @@ public interface IInterceptionContext
 	/// <summary>
 	/// The configuration of the domain mapping subsystem
 	/// </summary>
-	DomainMappedStaticFileOptions Options { get; }
+	DomainMappedStaticFileConfiguration Configuration { get; }
 
 	/// <summary>
 	/// The path of the request that is used for resource location
@@ -23,7 +23,7 @@ public interface IInterceptionContext
 	string RequestPath { get; }
 
 	/// <summary>
-	/// The request mappings that we are to use
+	/// The resource mappings that we are to use in handling requests
 	/// </summary>
-	RequestMapping? RequestMapping { get; }
+	ResourceMapping? ResourceMapping { get; }
 }

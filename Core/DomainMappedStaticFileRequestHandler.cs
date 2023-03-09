@@ -21,7 +21,7 @@ internal class DomainMappedStaticFileRequestHandler
 	internal async Task InterceptRequestAsync(IInterceptionContext interceptionContext, CancellationToken cancellationToken)
 	{
 		ArgumentNullException.ThrowIfNull(interceptionContext, nameof(interceptionContext));
-		ArgumentNullException.ThrowIfNull(interceptionContext.RequestMapping, nameof(interceptionContext.RequestMapping));
+		ArgumentNullException.ThrowIfNull(interceptionContext.ResourceMapping, nameof(interceptionContext.ResourceMapping));
 
 		_logger.LogDebug("Interception of request by domain mapped static files middleware");
 
@@ -71,7 +71,7 @@ internal class DomainMappedStaticFileRequestHandler
 	/// <param name="interceptionContext">The context of the interception request</param>
 	private static void WriteResponseHeaders(IInterceptionContext interceptionContext, ResourceContentAccessor resourceContentAccessor)
 	{
-		var cachingPolicy = interceptionContext.RequestMapping!.OverrideCachingPolicy ?? interceptionContext.Options.DefaultCachingPolicy;
+		var cachingPolicy = interceptionContext.ResourceMapping!.CachingPolicy;
 		var cachingStrategy = cachingPolicy.CreateCachingStrategy();
 
 		cachingStrategy.WriteCacheHeaders(interceptionContext, resourceContentAccessor);

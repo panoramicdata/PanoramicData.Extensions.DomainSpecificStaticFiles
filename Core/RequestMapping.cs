@@ -7,18 +7,40 @@ namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 /// </summary>
 public class RequestMapping
 {
+	public RequestMapping() { }
+
+	/// <summary>
+	/// Create a new request mapping with the specified Url prefix and resource path prefix
+	/// </summary>
+	/// <param name="relativeUrlPrefix">The relative prefix that is to be intercepted</param>
+	/// <param name="resourcePathPrefix">The container in which all domain-mapped resources reside</param>
+	/// <remarks>The resource path prefix is usually case-sensitive, especially on Linux</remarks>
+	public RequestMapping(string relativeUrlPrefix, string resourcePathPrefix)
+	{
+		RelativeUrlPrefix = relativeUrlPrefix;
+		ResourceContainer = resourcePathPrefix;
+	}
+
 	/// <summary>
 	/// The prefix of a request that is to be mapped to a resource
 	/// </summary>
-	public string RequestUrlPrefix { get; set; } = string.Empty;
+	public string RelativeUrlPrefix { get; set; } = string.Empty;
 
 	/// <summary>
-	/// The location of the resources that are to be delivered
+	/// The outermost location of the resources that are to be delivered
 	/// </summary>
-	public string ResourcePath { get; set; } = string.Empty;
+	/// <remarks>
+	/// Note that this is usually case-sensitive, especially on Linux
+	/// </remarks>
+	public string ResourceContainer { get; set; } = string.Empty;
 
 	/// <summary>
 	/// An override for a custom caching policy for this resource
 	/// </summary>
 	public ICachingPolicy? OverrideCachingPolicy { get; set; }
+
+	/// <summary>
+	/// The mappings between domains and resource paths
+	/// </summary>
+	public List<DomainMapping> DomainMappings { get; set; } = new();
 }

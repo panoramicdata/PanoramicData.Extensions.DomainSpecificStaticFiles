@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Style\Alternative\images\favicon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Style\Alternative\images\favicon.png" />
     <Content Include="Style\Default\images\favicon.png" />
   </ItemGroup>
 

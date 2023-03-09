@@ -40,8 +40,12 @@ public class Program
 		{
 			new RequestMapping()
 			{
-				RequestUrlPrefix = "localhost/style",
-				ResourcePath = "Style/Default/"
+				RelativeUrlPrefix = "style",
+				ResourceContainer = "Style",
+				DomainMappings = new()
+				{
+					new DomainMapping { Domain = "localhost", ResourceSubContainer = "Default" }
+				}
 			}
 		};
 }

@@ -7,18 +7,18 @@ namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 /// </summary>
 internal class InterceptionContext : IInterceptionContext
 {
-	public InterceptionContext(HttpContext context, DomainMappedStaticFileOptions options)
+	public InterceptionContext(HttpContext context, DomainMappedStaticFileConfiguration configuration)
 	{
-		Options = options;
+		Configuration = configuration;
 		HttpContext = context;
 		RequestPath = GetRequestPath(context);
-		RequestMapping = GetResourceMapping(RequestPath, options);
+		ResourceMapping = GetResourceMapping(RequestPath, Configuration);
 	}
 
 	/// <summary>
-	/// The options with which the mapping is being performed
+	/// The configuration with which the mapping is being performed
 	/// </summary>
-	public DomainMappedStaticFileOptions Options { get; }
+	public DomainMappedStaticFileConfiguration Configuration { get; }
 
 	/// <summary>
 	/// The underlying HttpContext of the request
@@ -33,12 +33,12 @@ internal class InterceptionContext : IInterceptionContext
 	/// <summary>
 	/// The mapping for this request, or null if it cannot be intercepted
 	/// </summary>
-	public RequestMapping? RequestMapping { get; }
+	public ResourceMapping? ResourceMapping { get; }
 
 	/// <summary>
 	/// Whether the request can be intercepted by this subsystem
 	/// </summary>
-	public bool CanInterceptRequest => RequestMapping is not null;
+	public bool CanInterceptRequest => ResourceMapping is not null;
 
 	private static string GetRequestPath(HttpContext context)
 	{
@@ -47,6 +47,6 @@ internal class InterceptionContext : IInterceptionContext
 		return requestUri.Host + requestUri.AbsolutePath;
 	}
 
-	private static RequestMapping? GetResourceMapping(string requestPath, DomainMappedStaticFileOptions options)
-		=> options.RequestMappings.FirstOrDefault(m => requestPath.StartsWith(m.RequestUrlPrefix, StringComparison.OrdinalIgnoreCase));
+	private static ResourceMapping? GetResourceMapping(string requestPath, DomainMappedStaticFileConfiguration configuration)
+		=> configuration.GetResourceMapping(requestPath);
 }

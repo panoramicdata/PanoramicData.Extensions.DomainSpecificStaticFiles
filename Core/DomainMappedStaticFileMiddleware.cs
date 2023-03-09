@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-
-namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 
 /// <summary>
 /// The middleware for serving domain mapped static files
@@ -8,13 +6,13 @@ namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 internal class DomainMappedStaticFileMiddleware : IMiddleware
 {
 	private readonly DomainMappedStaticFileRequestHandler _handler;
-	private readonly DomainMappedStaticFileOptions _options;
+	private readonly DomainMappedStaticFileConfiguration _configuration;
 	private readonly ILogger<DomainMappedStaticFileMiddleware> _logger;
 
-	public DomainMappedStaticFileMiddleware(DomainMappedStaticFileRequestHandler handler, IOptions<DomainMappedStaticFileOptions> options, ILogger<DomainMappedStaticFileMiddleware> logger)
+	public DomainMappedStaticFileMiddleware(DomainMappedStaticFileRequestHandler handler, DomainMappedStaticFileConfiguration configuration, ILogger<DomainMappedStaticFileMiddleware> logger)
 	{
 		_handler = handler;
-		_options = options.Value;
+		_configuration = configuration;
 		_logger = logger;
 	}
 
@@ -28,7 +26,7 @@ internal class DomainMappedStaticFileMiddleware : IMiddleware
 		ArgumentNullException.ThrowIfNull(context, nameof(context));
 		ArgumentNullException.ThrowIfNull(next, nameof(next));
 
-		var interceptionContext = new InterceptionContext(context, _options);
+		var interceptionContext = new InterceptionContext(context, _configuration);
 		if (interceptionContext.CanInterceptRequest)
 		{
 			// This is a request that we are supposed to intercept

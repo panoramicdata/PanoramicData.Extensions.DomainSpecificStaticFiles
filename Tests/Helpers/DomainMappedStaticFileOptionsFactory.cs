@@ -8,8 +8,8 @@ internal static class DomainMappedStaticFileOptionsFactory
 			{
 				new RequestMapping
 				{
-					RequestUrlPrefix = "localhost/style/",
-					ResourcePath = "Style/Default/"
+					RelativeUrlPrefix = "localhost/style/",
+					ResourceContainer = "Style/Default/"
 				}
 			}
 		};

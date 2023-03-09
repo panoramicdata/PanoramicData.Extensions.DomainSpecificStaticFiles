@@ -6,9 +6,8 @@ namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Helpers;
 internal class FakeInterceptionContextBuilder
 {
 	private string _requestPath = "localhost/style/images/favicon.png";
-	private DomainMappedStaticFileOptions _options = DomainMappedStaticFileOptionsFactory.CreateDefaultOptions();
+	private DomainMappedStaticFileConfiguration _configuration = DomainMappedStaticFileConfigurationFactory.CreateDefaultConfiguration();
 	private HttpContext _httpContext = FakeHttpContextFactory.CreateDefaultHttpContext();
-	private RequestMapping? _requestMapping;
 
 	private FakeInterceptionContextBuilder() { }
 
@@ -21,16 +20,9 @@ internal class FakeInterceptionContextBuilder
 		return this;
 	}
 
-	public FakeInterceptionContextBuilder WithOptions(DomainMappedStaticFileOptions options)
+	public FakeInterceptionContextBuilder WithConfiguration(DomainMappedStaticFileConfiguration configuration)
 	{
-		_options = options;
-		return this;
-	}
-
-	public FakeInterceptionContextBuilder WithRequestMappingAtIndex(int index)
-	{
-		var mappings = new List<RequestMapping>(_options.RequestMappings);
-		_requestMapping = mappings[index];
+		_configuration = configuration;
 		return this;
 	}
 
@@ -40,12 +32,11 @@ internal class FakeInterceptionContextBuilder
 		return this;
 	}
 
-	public IInterceptionContext Build()
-		=> new FakeInterceptionContext()
-		{
-			RequestPath = _requestPath,
-			Options = _options,
-			HttpContext = _httpContext,
-			RequestMapping = _requestMapping
-		};
+	public IInterceptionContext Build() => new FakeInterceptionContext()
+	{
+		RequestPath = _requestPath,
+		Configuration = _configuration,
+		HttpContext = _httpContext,
+		ResourceMapping = _configuration.GetResourceMapping(_requestPath),
+	};
 }

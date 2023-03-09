@@ -13,19 +13,24 @@ internal static class ResourcePathCalculator
 	internal static string GetResourcePath(IInterceptionContext interceptionContext)
 	{
 		ArgumentNullException.ThrowIfNull(interceptionContext);
-		ArgumentNullException.ThrowIfNull(interceptionContext.RequestMapping, nameof(interceptionContext.RequestMapping));
+		ArgumentNullException.ThrowIfNull(interceptionContext.ResourceMapping, nameof(interceptionContext.ResourceMapping));
 
 		var requestPath = interceptionContext.RequestPath;
-		var mapping = interceptionContext.RequestMapping;
+		var mapping = interceptionContext.ResourceMapping;
 
 		var subPath = requestPath[mapping.RequestUrlPrefix.Length..];
-		if (subPath.StartsWith("/", StringComparison.OrdinalIgnoreCase))
+		if (subPath.StartsWith("/", StringComparison.Ordinal))
 		{
 			subPath = subPath[1..];
 		}
 
 		var resourcePath = mapping.ResourcePath;
-		if (!resourcePath.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+		if (resourcePath.StartsWith("/", StringComparison.Ordinal))
+		{
+			resourcePath = resourcePath[1..];
+		}
+
+		if (!resourcePath.EndsWith("/", StringComparison.Ordinal))
 		{
 			resourcePath += "/";
 		}
