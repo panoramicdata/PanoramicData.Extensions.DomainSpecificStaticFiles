@@ -1,7 +1,7 @@
 ﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 
 /// <summary>
-/// The definition of a resource provider that can be used by the white labelling subsystem
+/// The definition of a resource provider that can be used by this subsystem
 /// to return a resource for a given request
 /// </summary>
 public interface IResourceProvider

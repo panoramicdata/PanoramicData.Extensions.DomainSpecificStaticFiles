@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class ApplicationBuilderExtensions
 {
 	/// <summary>
-	/// Add the whitelabelling static file middleware to the request pipeline
+	/// Add the domain mapped static file middleware to the request pipeline
 	/// </summary>
 	/// <param name="app">The instance of the interface that we are extending</param>
 	/// <returns>The instance that was extended, to support method chaining</returns>

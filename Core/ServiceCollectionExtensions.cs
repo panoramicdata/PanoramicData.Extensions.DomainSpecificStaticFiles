@@ -9,13 +9,13 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class ServiceCollectionExtensions
 {
 	/// <summary>
-	/// Add the types necessary to serve static whitelabelling files
+	/// Add the types necessary to serve static domain mapped files
 	/// </summary>
 	/// <param name="services">The service collection instance on which we are to operate</param>
-	/// <param name="requestMappings">The request mappings to be used in whitelabelling</param>
+	/// <param name="requestMappings">The request mappings to be used in serving resources</param>
 	/// <returns>The instance being extended, to support method chaining</returns>
 	public static IServiceCollection AddDomainMappedStaticFiles(this IServiceCollection services, IConfiguration configuration, IEnumerable<RequestMapping> requestMappings)
-		=> AddWhitelabellingStaticFiles(services, configuration, t =>
+		=> AddDomainMappedStaticFiles(services, configuration, t =>
 		{
 			if (!t.RequestMappings.Any())
 			{
@@ -24,14 +24,14 @@ public static class ServiceCollectionExtensions
 		});
 
 	/// <summary>
-	/// Add the types necessary to serve static whitelabelling files
+	/// Add the types necessary to serve static domain mapped files
 	/// </summary>
 	/// <param name="services">The service collection instance on which we are to operate</param>
-	/// <param name="config">The configuration action to be applied to the options that are to be used for whitelabelling</param>
+	/// <param name="config">The configuration action to be applied to the options that are to be used for serving resources</param>
 	/// <returns>The instance being extended, to support method chaining</returns>
-	public static IServiceCollection AddWhitelabellingStaticFiles(this IServiceCollection services, IConfiguration configuration, Action<DomainMappedStaticFileOptions> config)
+	public static IServiceCollection AddDomainMappedStaticFiles(this IServiceCollection services, IConfiguration configuration, Action<DomainMappedStaticFileOptions> config)
 	{
-		_ = services.AddOptions<DomainMappedStaticFileOptions>().Bind(configuration.GetSection("Whitelabelling")).Configure(config);
+		_ = services.AddOptions<DomainMappedStaticFileOptions>().Bind(configuration.GetSection("DomainMappings")).Configure(config);
 		_ = services.AddTransient(CreateResourceProvider);
 		_ = services.AddTransient<DomainMappedStaticFileMiddleware>();
 		_ = services.AddTransient<DomainMappedStaticFileRequestHandler>();

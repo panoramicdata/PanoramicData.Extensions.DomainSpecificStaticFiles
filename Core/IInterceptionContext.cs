@@ -13,7 +13,7 @@ internal interface IInterceptionContext
 	HttpContext HttpContext { get; }
 
 	/// <summary>
-	/// The configuration of the whitelabelling subsystem
+	/// The configuration of the domain mapping subsystem
 	/// </summary>
 	DomainMappedStaticFileOptions Options { get; }
 

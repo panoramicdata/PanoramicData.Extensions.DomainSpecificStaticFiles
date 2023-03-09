@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
+﻿using Microsoft.AspNetCore.Http.Extensions;
 
 namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 
@@ -17,7 +16,7 @@ internal class InterceptionContext : IInterceptionContext
 	}
 
 	/// <summary>
-	/// The options with which the white labelling is being performed
+	/// The options with which the mapping is being performed
 	/// </summary>
 	public DomainMappedStaticFileOptions Options { get; }
 
@@ -37,7 +36,7 @@ internal class InterceptionContext : IInterceptionContext
 	public RequestMapping? RequestMapping { get; }
 
 	/// <summary>
-	/// Whether the request can be intercepted by the white labelling subsystem
+	/// Whether the request can be intercepted by this subsystem
 	/// </summary>
 	public bool CanInterceptRequest => RequestMapping is not null;
 

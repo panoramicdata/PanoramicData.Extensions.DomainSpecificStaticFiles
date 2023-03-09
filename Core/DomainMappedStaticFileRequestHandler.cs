@@ -1,7 +1,7 @@
 ﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 
 /// <summary>
-/// Request handler for a white labelled static resource
+/// Request handler for a domain mapped static resource
 /// </summary>
 internal class DomainMappedStaticFileRequestHandler
 {
@@ -23,7 +23,7 @@ internal class DomainMappedStaticFileRequestHandler
 		ArgumentNullException.ThrowIfNull(interceptionContext, nameof(interceptionContext));
 		ArgumentNullException.ThrowIfNull(interceptionContext.RequestMapping, nameof(interceptionContext.RequestMapping));
 
-		_logger.LogDebug("Interception of request by whitelabelling static files middleware");
+		_logger.LogDebug("Interception of request by domain mapped static files middleware");
 
 		var resourcePath = ResourcePathCalculator.GetResourcePath(interceptionContext);
 		var resourceInfo = await _resourceProvider.GetResourceInfoAsync(resourcePath);

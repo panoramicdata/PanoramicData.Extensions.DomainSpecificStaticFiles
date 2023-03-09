@@ -1,6 +1,6 @@
 ﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 /// <summary>
-/// Information about a white labelled resource
+/// Information about a domain mapped resource
 /// </summary>
 public class ResourceInfo
 {

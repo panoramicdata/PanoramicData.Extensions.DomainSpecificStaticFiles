@@ -1,7 +1,7 @@
 ﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 
 /// <summary>
-/// Options for the WhitelabelledStaticFileMiddleware
+/// Options for the DomainMappedStaticFileMiddleware
 /// </summary>
 public class DomainMappedStaticFileOptions
 {

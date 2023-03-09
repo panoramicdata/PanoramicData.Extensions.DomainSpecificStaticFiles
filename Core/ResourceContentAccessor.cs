@@ -1,7 +1,7 @@
 ﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 
 /// <summary>
-/// Accessor for retrieving the contents of a whitelabelled resource
+/// Accessor for retrieving the contents of a domain mapped resource
 /// </summary>
 public class ResourceContentAccessor : IDisposable
 {

@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 
 namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 
 /// <summary>
-/// The middleware for serving whitelabelled static files
+/// The middleware for serving domain mapped static files
 /// </summary>
 internal class DomainMappedStaticFileMiddleware : IMiddleware
 {
