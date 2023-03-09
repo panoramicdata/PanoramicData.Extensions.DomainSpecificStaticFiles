@@ -8,9 +8,14 @@ public class ResourceContentAccessor : IDisposable
 	private bool _disposedValue;
 
 	/// <summary>
-	/// The stream for accessing the contents of the resource
+	/// The information about the resource being accessed
 	/// </summary>
-	public required Stream ResourceStream { get; init; }
+	public required ResourceInfo ResourceInfo { get; init; }
+
+	/// <summary>
+	/// The provider for accessing the contents of the resource
+	/// </summary>
+	public required IResourceProvider ResourceProvider { get; init; }
 
 	/// <summary>
 	/// The MIME type of the resource
@@ -18,11 +23,30 @@ public class ResourceContentAccessor : IDisposable
 	public required string MimeType { get; init; }
 
 	/// <summary>
-	/// The hash of the resource
+	/// Get the stream for accessing the resource contents
 	/// </summary>
-	public required string Hash { get; init; }
+	/// <param name="cancellationToken">The token used to manage cancellation</param>
+	/// <returns>A stream providing access to the resource contents</returns>
+	public Task<Stream> GetResourceContentStreamAsync(CancellationToken cancellationToken)
+		=> ResourceProvider.GetResourceContentStreamAsync(ResourceInfo, cancellationToken);
 
 	/// <summary>
+	/// Get the hash of the resource contents
+	/// </summary>
+	/// <param name="cancellationToken">The token used to manage cancellation</param>
+	/// <returns>A hash of the resource contents</returns>
+	public Task<byte[]> GetHashAsync(CancellationToken cancellationToken)
+		=> ResourceProvider.GetResourceContentsHashAsync(ResourceInfo, cancellationToken);
+
+	/// <summary>
+	/// <summary>
+	/// Get the last modified date and time of the resource contents
+	/// </summary>
+	/// <param name="cancellationToken">The token used to manage cancellation</param>
+	/// <returns>The last modified date and time of the resource</returns>
+	public Task<DateTime> GetLastModifiedAsync(CancellationToken cancellationToken)
+		=> ResourceProvider.GetResourceLastModifiedUtcAsync(ResourceInfo, cancellationToken);
+
 	/// Perform disposal of managed resources
 	/// </summary>
 	/// <param name="disposing">Whether disposal has been initiated</param>
@@ -32,7 +56,10 @@ public class ResourceContentAccessor : IDisposable
 		{
 			if (disposing)
 			{
-				ResourceStream.Dispose();
+				if (ResourceProvider is IDisposable disposable)
+				{
+					disposable.Dispose();
+				}
 			}
 
 			_disposedValue = true;

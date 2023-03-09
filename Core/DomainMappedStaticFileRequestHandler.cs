@@ -18,7 +18,7 @@ internal class DomainMappedStaticFileRequestHandler
 	/// Perform interception of a request
 	/// </summary>
 	/// <param name="interceptionContext">The context of the interception being performed</param>
-	internal async Task InterceptRequestAsync(IInterceptionContext interceptionContext)
+	internal async Task InterceptRequestAsync(IInterceptionContext interceptionContext, CancellationToken cancellationToken)
 	{
 		ArgumentNullException.ThrowIfNull(interceptionContext, nameof(interceptionContext));
 		ArgumentNullException.ThrowIfNull(interceptionContext.RequestMapping, nameof(interceptionContext.RequestMapping));
@@ -26,7 +26,7 @@ internal class DomainMappedStaticFileRequestHandler
 		_logger.LogDebug("Interception of request by domain mapped static files middleware");
 
 		var resourcePath = ResourcePathCalculator.GetResourcePath(interceptionContext);
-		var resourceInfo = await _resourceProvider.GetResourceInfoAsync(resourcePath);
+		var resourceInfo = await _resourceProvider.GetResourceInfoAsync(resourcePath, cancellationToken);
 		if (!resourceInfo.Exists)
 		{
 			// No matching resource found!
@@ -35,9 +35,9 @@ internal class DomainMappedStaticFileRequestHandler
 			return;
 		}
 
-		using var resourceContentAccessor = await _resourceProvider.GetResourceContentAccessorAsync(resourceInfo);
+		using var resourceContentAccessor = await _resourceProvider.GetResourceContentAccessorAsync(resourceInfo, cancellationToken);
 
-		await WriteResponseAsync(interceptionContext, resourceContentAccessor);
+		await WriteResponseAsync(interceptionContext, resourceContentAccessor, cancellationToken);
 	}
 
 	/// <summary>
@@ -45,20 +45,23 @@ internal class DomainMappedStaticFileRequestHandler
 	/// </summary>
 	/// <param name="interceptionContext">The context of the interception request</param>
 	/// <param name="resourceContentAccessor">The accessor used to retrieve the contents of the resource</param>
-	private static async Task WriteResponseAsync(IInterceptionContext interceptionContext, ResourceContentAccessor resourceContentAccessor)
+	private static async Task WriteResponseAsync(IInterceptionContext interceptionContext, ResourceContentAccessor resourceContentAccessor, CancellationToken cancellationToken)
 	{
 		var response = interceptionContext.HttpContext.Response;
 		response.StatusCode = StatusCodes.Status200OK;
 		response.ContentType = resourceContentAccessor.MimeType;
 
-		WriteResponseHeaders(interceptionContext);
+		WriteResponseHeaders(interceptionContext, resourceContentAccessor);
 
+		using var stream = await resourceContentAccessor.GetResourceContentStreamAsync(cancellationToken);
 		int bytesRead;
-		var buffer = new byte[4096];
+		var offset = 0;
+		var buffer = new byte[4096].AsMemory();
 		do
 		{
-			bytesRead = await resourceContentAccessor.ResourceStream.ReadAsync(buffer);
-			_ = await response.BodyWriter.WriteAsync(buffer.AsMemory()[..bytesRead]);
+			bytesRead = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
+			_ = await response.BodyWriter.WriteAsync(buffer[..bytesRead], cancellationToken).ConfigureAwait(false);
+			offset += bytesRead;
 		} while (bytesRead > 0);
 	}
 
@@ -66,15 +69,11 @@ internal class DomainMappedStaticFileRequestHandler
 	/// Write the headers for the response associated with a resource
 	/// </summary>
 	/// <param name="interceptionContext">The context of the interception request</param>
-	private static void WriteResponseHeaders(IInterceptionContext interceptionContext)
+	private static void WriteResponseHeaders(IInterceptionContext interceptionContext, ResourceContentAccessor resourceContentAccessor)
 	{
-		var cachingPeriod = interceptionContext.RequestMapping!.OverrideCachingPeriod ?? interceptionContext.Options.DefaultCachingPeriod;
+		var cachingPolicy = interceptionContext.RequestMapping!.OverrideCachingPolicy ?? interceptionContext.Options.DefaultCachingPolicy;
+		var cachingStrategy = cachingPolicy.CreateCachingStrategy();
 
-		// Add caching headers
-		interceptionContext.HttpContext.Response.Headers.CacheControl = cachingPeriod.TotalSeconds > 0
-			? (Microsoft.Extensions.Primitives.StringValues)$"max-age={cachingPeriod.TotalSeconds:F0}"
-			: (Microsoft.Extensions.Primitives.StringValues)"no-cache";
-
-		// TODO: Consider adding Last Modified and ETag headers as an alternative optimisation strategy
+		cachingStrategy.WriteCacheHeaders(interceptionContext, resourceContentAccessor);
 	}
 }

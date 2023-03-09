@@ -33,7 +33,7 @@ internal class DomainMappedStaticFileMiddleware : IMiddleware
 		{
 			// This is a request that we are supposed to intercept
 			await _handler
-				.InterceptRequestAsync(interceptionContext)
+				.InterceptRequestAsync(interceptionContext, context.RequestAborted)
 				.ConfigureAwait(false);
 			return;
 		}

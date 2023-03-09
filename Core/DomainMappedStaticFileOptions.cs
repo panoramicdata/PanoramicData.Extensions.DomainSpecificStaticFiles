@@ -1,4 +1,6 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿using PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
+
+namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 
 /// <summary>
 /// Options for the DomainMappedStaticFileMiddleware
@@ -11,10 +13,10 @@ public class DomainMappedStaticFileOptions
 	public IEnumerable<RequestMapping> RequestMappings { get; set; } = Enumerable.Empty<RequestMapping>();
 
 	/// <summary>
-	/// The period for which to cache requests, in minutes
+	/// The default caching policy that is to be applied to responses
 	/// </summary>
 	/// <remarks>A value of zero can be used to disable caching headers</remarks>
-	public TimeSpan DefaultCachingPeriod { get; set; } = TimeSpan.FromDays(30);
+	public ICachingPolicy DefaultCachingPolicy { get; set; } = new MaxAgeCachingPolicy(TimeSpan.FromDays(7));
 
 	/// <summary>
 	/// The type used to access and serve resources

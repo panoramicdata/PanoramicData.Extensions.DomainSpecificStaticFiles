@@ -13,9 +13,4 @@ public class ResourceInfo
 	/// The path of the resource in the format needed by the file provider
 	/// </summary>
 	public string ResourcePath { get; init; } = string.Empty;
-
-	/// <summary>
-	/// The hash of the contents of the resource
-	/// </summary>
-	public string Hash { get; init; } = string.Empty;
 }

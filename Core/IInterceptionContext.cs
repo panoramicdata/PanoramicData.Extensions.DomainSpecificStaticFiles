@@ -1,6 +1,6 @@
 ﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 
-internal interface IInterceptionContext
+public interface IInterceptionContext
 {
 	/// <summary>
 	/// Can this request be intercepted

@@ -1,4 +1,6 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿using PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
+
+namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 
 /// <summary>
 /// A mapping from a request prefix to a resource location
@@ -16,7 +18,7 @@ public class RequestMapping
 	public string ResourcePath { get; set; } = string.Empty;
 
 	/// <summary>
-	/// An override for a custom caching period for this resource
+	/// An override for a custom caching policy for this resource
 	/// </summary>
-	public TimeSpan? OverrideCachingPeriod { get; internal set; }
+	public ICachingPolicy? OverrideCachingPolicy { get; set; }
 }
