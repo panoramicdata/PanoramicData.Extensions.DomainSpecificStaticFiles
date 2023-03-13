@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.Primitives;
-using PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
-using PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Helpers;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Caching;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Helpers;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Caching;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Caching;
 
 public class NoCacheCachingStrategyTests
 {
@@ -12,7 +12,7 @@ public class NoCacheCachingStrategyTests
 	{
 		var policy = new NoCacheCachingPolicy();
 		var strategy = policy.CreateCachingStrategy();
-		var configuration = DomainMappedStaticFileConfigurationFactory.CreateConfiguration(new List<(string, ResourceMapping)>
+		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(new List<(string, ResourceMapping)>
 		{
 			new ("localhost",
 				new ResourceMapping

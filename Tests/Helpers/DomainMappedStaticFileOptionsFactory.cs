@@ -1,7 +1,7 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Helpers;
-internal static class DomainMappedStaticFileOptionsFactory
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Helpers;
+internal static class DomainSpecificStaticFileOptionsFactory
 {
-	public static DomainMappedStaticFileOptions CreateDefaultOptions()
+	public static DomainSpecificStaticFileOptions CreateDefaultOptions()
 		=> new()
 		{
 			RequestMappings = new List<RequestMapping>()
@@ -14,7 +14,7 @@ internal static class DomainMappedStaticFileOptionsFactory
 			}
 		};
 
-	public static DomainMappedStaticFileOptions CreateOptions(IEnumerable<RequestMapping> requestMappings)
+	public static DomainSpecificStaticFileOptions CreateOptions(IEnumerable<RequestMapping> requestMappings)
 		=> new()
 		{
 			RequestMappings = new List<RequestMapping>(requestMappings)

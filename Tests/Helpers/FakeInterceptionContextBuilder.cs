@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
-using PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Fakes;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Fakes;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Helpers;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Helpers;
 
 internal class FakeInterceptionContextBuilder
 {
 	private string _requestPath = "localhost/style/images/favicon.png";
-	private DomainMappedStaticFileConfiguration _configuration = DomainMappedStaticFileConfigurationFactory.CreateDefaultConfiguration();
+	private DomainSpecificStaticFileConfiguration _configuration = DomainSpecificStaticFileConfigurationFactory.CreateDefaultConfiguration();
 	private HttpContext _httpContext = FakeHttpContextFactory.CreateDefaultHttpContext();
 
 	private FakeInterceptionContextBuilder() { }
@@ -20,7 +20,7 @@ internal class FakeInterceptionContextBuilder
 		return this;
 	}
 
-	public FakeInterceptionContextBuilder WithConfiguration(DomainMappedStaticFileConfiguration configuration)
+	public FakeInterceptionContextBuilder WithConfiguration(DomainSpecificStaticFileConfiguration configuration)
 	{
 		_configuration = configuration;
 		return this;

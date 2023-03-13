@@ -1,11 +1,11 @@
-﻿using PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
+﻿using PanoramicData.Extensions.DomainSpecificStaticFiles.Caching;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Helpers;
-internal static class DomainMappedStaticFileConfigurationFactory
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Helpers;
+internal static class DomainSpecificStaticFileConfigurationFactory
 {
-	public static DomainMappedStaticFileConfiguration CreateDefaultConfiguration()
+	public static DomainSpecificStaticFileConfiguration CreateDefaultConfiguration()
 	{
-		var configuration = new DomainMappedStaticFileConfiguration();
+		var configuration = new DomainSpecificStaticFileConfiguration();
 
 		configuration.AddResourceMapping("localhost", new()
 		{
@@ -17,9 +17,9 @@ internal static class DomainMappedStaticFileConfigurationFactory
 		return configuration;
 	}
 
-	public static DomainMappedStaticFileConfiguration CreateConfiguration(IEnumerable<(string Domain, ResourceMapping ResourceMapping)> mappings)
+	public static DomainSpecificStaticFileConfiguration CreateConfiguration(IEnumerable<(string Domain, ResourceMapping ResourceMapping)> mappings)
 	{
-		var configuration = new DomainMappedStaticFileConfiguration();
+		var configuration = new DomainSpecificStaticFileConfiguration();
 
 		foreach (var mapping in mappings)
 		{

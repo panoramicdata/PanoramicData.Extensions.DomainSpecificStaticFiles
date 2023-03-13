@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Fakes;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Fakes;
 
 internal class FakeLogger<T> : ILogger<T>
 {

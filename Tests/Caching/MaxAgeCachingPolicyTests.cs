@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Caching;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Caching;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Caching;
 
 public class MaxAgeCachingPolicyTests
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Helpers;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Helpers;
 
 internal class FakeHttpContextFactory
 {

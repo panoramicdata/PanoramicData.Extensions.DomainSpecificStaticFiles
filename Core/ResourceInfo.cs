@@ -1,6 +1,6 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 /// <summary>
-/// Information about a domain mapped resource
+/// Information about a domain-specific resource
 /// </summary>
 public class ResourceInfo
 {

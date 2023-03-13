@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Diagnostics;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles.Demo.Pages;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Demo.Pages;
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 [IgnoreAntiforgeryToken]
 public class ErrorModel : PageModel

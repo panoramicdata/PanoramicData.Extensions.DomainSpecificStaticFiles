@@ -1,4 +1,4 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Caching;
 
 public class MaxAgeCachingPolicy : ICachingPolicy
 {

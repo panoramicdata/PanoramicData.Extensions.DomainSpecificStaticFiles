@@ -1,6 +1,6 @@
-﻿using PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
+﻿using PanoramicData.Extensions.DomainSpecificStaticFiles.Caching;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 /// <summary>
 /// A mapping from a request prefix to a resource location
@@ -13,7 +13,7 @@ public class RequestMapping
 	/// Create a new request mapping with the specified Url prefix and resource path prefix
 	/// </summary>
 	/// <param name="relativeUrlPrefix">The relative prefix that is to be intercepted</param>
-	/// <param name="resourcePathPrefix">The container in which all domain-mapped resources reside</param>
+	/// <param name="resourcePathPrefix">The container in which all Domain-specific resources reside</param>
 	/// <remarks>The resource path prefix is usually case-sensitive, especially on Linux</remarks>
 	public RequestMapping(string relativeUrlPrefix, string resourcePathPrefix)
 	{

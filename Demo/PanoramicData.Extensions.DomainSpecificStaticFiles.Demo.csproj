@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\PanoramicData.Extensions.DomainMappedStaticFiles.csproj" />
+    <ProjectReference Include="..\Core\PanoramicData.Extensions.DomainSpecificStaticFiles.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 /// <summary>
 /// Resource path calculator, converting a request URL to an expected resource location

@@ -1,6 +1,6 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
-internal static class DomainMappedStaticFileOptionsTranslator
+internal static class DomainSpecificStaticFileOptionsTranslator
 {
 	/// <summary>
 	/// Translate the options that are provided by the developer to the configuration
@@ -8,9 +8,9 @@ internal static class DomainMappedStaticFileOptionsTranslator
 	/// </summary>
 	/// <param name="options">The options that are to be transformed/translated</param>
 	/// <returns>The configuration that results from the options from the developer</returns>
-	public static DomainMappedStaticFileConfiguration Translate(DomainMappedStaticFileOptions options)
+	public static DomainSpecificStaticFileConfiguration Translate(DomainSpecificStaticFileOptions options)
 	{
-		var configuration = new DomainMappedStaticFileConfiguration()
+		var configuration = new DomainSpecificStaticFileConfiguration()
 		{
 			ResourceProviderType = options.ResourceProviderType,
 		};

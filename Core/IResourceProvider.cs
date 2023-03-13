@@ -1,4 +1,4 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 /// <summary>
 /// The definition of a resource provider that can be used by this subsystem

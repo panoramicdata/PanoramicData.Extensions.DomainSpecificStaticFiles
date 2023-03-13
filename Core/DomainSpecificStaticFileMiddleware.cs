@@ -1,15 +1,15 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 /// <summary>
-/// The middleware for serving domain mapped static files
+/// The middleware for serving domain-specific static files
 /// </summary>
-internal class DomainMappedStaticFileMiddleware : IMiddleware
+internal class DomainSpecificStaticFileMiddleware : IMiddleware
 {
-	private readonly DomainMappedStaticFileRequestHandler _handler;
-	private readonly DomainMappedStaticFileConfiguration _configuration;
-	private readonly ILogger<DomainMappedStaticFileMiddleware> _logger;
+	private readonly DomainSpecificStaticFileRequestHandler _handler;
+	private readonly DomainSpecificStaticFileConfiguration _configuration;
+	private readonly ILogger<DomainSpecificStaticFileMiddleware> _logger;
 
-	public DomainMappedStaticFileMiddleware(DomainMappedStaticFileRequestHandler handler, DomainMappedStaticFileConfiguration configuration, ILogger<DomainMappedStaticFileMiddleware> logger)
+	public DomainSpecificStaticFileMiddleware(DomainSpecificStaticFileRequestHandler handler, DomainSpecificStaticFileConfiguration configuration, ILogger<DomainSpecificStaticFileMiddleware> logger)
 	{
 		_handler = handler;
 		_configuration = configuration;

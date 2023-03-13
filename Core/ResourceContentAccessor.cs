@@ -1,7 +1,7 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 /// <summary>
-/// Accessor for retrieving the contents of a domain mapped resource
+/// Accessor for retrieving the contents of a domain-specific resource
 /// </summary>
 public class ResourceContentAccessor : IDisposable
 {

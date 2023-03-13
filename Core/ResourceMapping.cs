@@ -1,6 +1,6 @@
-﻿using PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
+﻿using PanoramicData.Extensions.DomainSpecificStaticFiles.Caching;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 public class ResourceMapping
 {

@@ -1,4 +1,4 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Caching;
 
 /// <summary>
 /// Marker interface for all caching strategy implementations

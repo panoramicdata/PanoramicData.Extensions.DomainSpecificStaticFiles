@@ -1,4 +1,4 @@
-namespace PanoramicData.Extensions.DomainMappedStaticFiles.Demo;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Demo;
 
 public class Program
 {
@@ -10,7 +10,7 @@ public class Program
 		builder.Services.AddRazorPages();
 		builder.Services.AddServerSideBlazor();
 
-		builder.Services.AddDomainMappedStaticFiles(builder.Configuration, GetDomainMappedStaticFileOptionsAction());
+		builder.Services.AddDomainSpecificStaticFiles(builder.Configuration, ApplyDomainSpecificStaticFileOptions);
 
 		var app = builder.Build();
 
@@ -25,7 +25,7 @@ public class Program
 		app.UseHttpsRedirection();
 
 		app.UseStaticFiles();
-		app.UseDomainMappedStaticFiles();
+		app.UseDomainSpecificStaticFiles();
 
 		app.UseRouting();
 
@@ -35,8 +35,12 @@ public class Program
 		app.Run();
 	}
 
-	private static Action<DomainMappedStaticFileOptions> GetDomainMappedStaticFileOptionsAction()
-		=> (options) => options.RequestMappings.Add(
+	/// <summary>
+	/// Apply the configuration of the request mappings and domains for which to serve static files
+	/// </summary>
+	/// <param name="options">The instance of the options to which we are to apply configuration</param>
+	private static void ApplyDomainSpecificStaticFileOptions(DomainSpecificStaticFileOptions options)
+		=> options.RequestMappings.Add(
 			new()
 			{
 				RelativeUrlPrefix = "style",

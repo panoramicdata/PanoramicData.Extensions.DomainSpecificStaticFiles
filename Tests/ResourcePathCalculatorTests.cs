@@ -1,15 +1,15 @@
 using FluentAssertions;
-using PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
-using PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Helpers;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Caching;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Helpers;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests;
 
 public class ResourcePathCalculatorTests
 {
 	[Fact]
 	public void GetResourcePath_RequestUrlPrefixEndsWithForwardSlash_CalculatesCorrectPath()
 	{
-		var configuration = DomainMappedStaticFileConfigurationFactory.CreateConfiguration(
+		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
 			new List<(string Domain, ResourceMapping ResourceMapping)>()
 			{
 				new (){
@@ -33,7 +33,7 @@ public class ResourcePathCalculatorTests
 	[Fact]
 	public void GetResourcePath_RequestUrlPrefixDoesNotEndWithForwardSlash_CalculatesCorrectPath()
 	{
-		var configuration = DomainMappedStaticFileConfigurationFactory.CreateConfiguration(
+		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
 			new List<(string Domain, ResourceMapping ResourceMapping)>()
 			{
 				new (){
@@ -57,7 +57,7 @@ public class ResourcePathCalculatorTests
 	[Fact]
 	public void GetResourcePath_ResourcePathStartsAndEndsWithForwardSlash_CalculatesCorrectPath()
 	{
-		var configuration = DomainMappedStaticFileConfigurationFactory.CreateConfiguration(
+		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
 			new List<(string Domain, ResourceMapping ResourceMapping)>()
 			{
 				new (){
@@ -81,7 +81,7 @@ public class ResourcePathCalculatorTests
 	[Fact]
 	public void GetResourcePath_ResourcePathDoesNotStartWithForwardSlash_CalculatesCorrectPath()
 	{
-		var configuration = DomainMappedStaticFileConfigurationFactory.CreateConfiguration(
+		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
 			new List<(string Domain, ResourceMapping ResourceMapping)>()
 			{
 				new (){
@@ -105,7 +105,7 @@ public class ResourcePathCalculatorTests
 	[Fact]
 	public void GetResourcePath_ResourcePathEndsWithForwardSlash_CalculatesCorrectPath()
 	{
-		var configuration = DomainMappedStaticFileConfigurationFactory.CreateConfiguration(
+		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
 			new List<(string Domain, ResourceMapping ResourceMapping)>()
 			{
 				new (){
@@ -129,7 +129,7 @@ public class ResourcePathCalculatorTests
 	[Fact]
 	public void GetResourcePath_ResourcePathDoesNotEndWithForwardSlash_CalculatesCorrectPath()
 	{
-		var configuration = DomainMappedStaticFileConfigurationFactory.CreateConfiguration(
+		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
 			new List<(string Domain, ResourceMapping ResourceMapping)>()
 			{
 				new (){
@@ -161,7 +161,7 @@ public class ResourcePathCalculatorTests
 	[Fact]
 	public void GetResourcePath_WithNoMatchingRequestMapping_ThrowsArgumentNullException()
 	{
-		var configuration = DomainMappedStaticFileConfigurationFactory.CreateConfiguration(
+		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
 			new List<(string Domain, ResourceMapping ResourceMapping)>()
 			{
 				new (){

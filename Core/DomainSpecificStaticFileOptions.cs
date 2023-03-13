@@ -1,11 +1,11 @@
-﻿using PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
+﻿using PanoramicData.Extensions.DomainSpecificStaticFiles.Caching;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 /// <summary>
-/// Options for the DomainMappedStaticFileMiddleware
+/// Options for the DomainSpecificStaticFileMiddleware
 /// </summary>
-public class DomainMappedStaticFileOptions
+public class DomainSpecificStaticFileOptions
 {
 	/// <summary>
 	/// The mappings for requests that we are to intercept

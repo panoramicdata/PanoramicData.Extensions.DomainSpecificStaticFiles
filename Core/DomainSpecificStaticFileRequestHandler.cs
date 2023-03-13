@@ -1,14 +1,14 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 /// <summary>
-/// Request handler for a domain mapped static resource
+/// Request handler for a domain-specific static resource
 /// </summary>
-internal class DomainMappedStaticFileRequestHandler
+internal class DomainSpecificStaticFileRequestHandler
 {
 	private readonly IResourceProvider _resourceProvider;
 	private readonly ILogger _logger;
 
-	public DomainMappedStaticFileRequestHandler(IResourceProvider resourceProvider, ILogger<DomainMappedStaticFileRequestHandler> logger)
+	public DomainSpecificStaticFileRequestHandler(IResourceProvider resourceProvider, ILogger<DomainSpecificStaticFileRequestHandler> logger)
 	{
 		_resourceProvider = resourceProvider;
 		_logger = logger;
@@ -23,7 +23,7 @@ internal class DomainMappedStaticFileRequestHandler
 		ArgumentNullException.ThrowIfNull(interceptionContext, nameof(interceptionContext));
 		ArgumentNullException.ThrowIfNull(interceptionContext.ResourceMapping, nameof(interceptionContext.ResourceMapping));
 
-		_logger.LogDebug("Interception of request by domain mapped static files middleware");
+		_logger.LogDebug("Interception of request by domain specific static files middleware");
 
 		var resourcePath = ResourcePathCalculator.GetResourcePath(interceptionContext);
 		var resourceInfo = await _resourceProvider.GetResourceInfoAsync(resourcePath, cancellationToken);

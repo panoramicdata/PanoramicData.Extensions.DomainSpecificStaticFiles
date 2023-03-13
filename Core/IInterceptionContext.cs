@@ -1,4 +1,4 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 public interface IInterceptionContext
 {
@@ -25,7 +25,7 @@ public interface IInterceptionContext
 	/// <summary>
 	/// The configuration of the domain mapping subsystem
 	/// </summary>
-	DomainMappedStaticFileConfiguration Configuration { get; }
+	DomainSpecificStaticFileConfiguration Configuration { get; }
 
 	/// <summary>
 	/// The path of the request that is used for resource location

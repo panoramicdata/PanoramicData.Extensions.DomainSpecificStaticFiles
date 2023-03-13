@@ -1,17 +1,17 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Fakes;
-using PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Helpers;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Fakes;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Helpers;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests;
 
-public class DomainMappedStaticFileRequestHandlerTests
+public class DomainSpecificStaticFileRequestHandlerTests
 {
 	[Fact]
 	public async Task InterceptRequestAsync_InterceptionContextIsNull_ThrowsArgumentNullException()
 	{
-		var handler = new DomainMappedStaticFileRequestHandler(new FakeResourceProvider(true), FakeLoggerFactory.CreateDefaultLogger<DomainMappedStaticFileRequestHandler>());
+		var handler = new DomainSpecificStaticFileRequestHandler(new FakeResourceProvider(true), FakeLoggerFactory.CreateDefaultLogger<DomainSpecificStaticFileRequestHandler>());
 		var action = () => handler.InterceptRequestAsync(null!, CancellationToken.None);
 
 		await action.Should().ThrowAsync<ArgumentNullException>();
@@ -20,8 +20,8 @@ public class DomainMappedStaticFileRequestHandlerTests
 	[Fact]
 	public async Task InterceptRequestAsync_InterceptionContextHasNullResourceMapping_ThrowsArgumentNullException()
 	{
-		var handler = new DomainMappedStaticFileRequestHandler(new FakeResourceProvider(true), FakeLoggerFactory.CreateDefaultLogger<DomainMappedStaticFileRequestHandler>());
-		var configuration = DomainMappedStaticFileConfigurationFactory.CreateConfiguration(new List<(string, ResourceMapping)>());
+		var handler = new DomainSpecificStaticFileRequestHandler(new FakeResourceProvider(true), FakeLoggerFactory.CreateDefaultLogger<DomainSpecificStaticFileRequestHandler>());
+		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(new List<(string, ResourceMapping)>());
 		var context = FakeInterceptionContextBuilder
 			.CreateBuilder()
 			.ForRequestPath("localhost/notfound/nosuchimage.png")
@@ -35,9 +35,9 @@ public class DomainMappedStaticFileRequestHandlerTests
 	[Fact]
 	public async Task InterceptRequestAsync_ProviderIndicatesResourceExists_Returns200OK()
 	{
-		var handler = new DomainMappedStaticFileRequestHandler(
+		var handler = new DomainSpecificStaticFileRequestHandler(
 			new FakeResourceProvider(true),
-			FakeLoggerFactory.CreateDefaultLogger<DomainMappedStaticFileRequestHandler>());
+			FakeLoggerFactory.CreateDefaultLogger<DomainSpecificStaticFileRequestHandler>());
 		var context = FakeInterceptionContextBuilder
 			.CreateBuilder()
 			.Build();
@@ -49,9 +49,9 @@ public class DomainMappedStaticFileRequestHandlerTests
 	[Fact]
 	public async Task InterceptRequestAsync_ProviderIndicatesResourceExists_AddsDefault7DayMaxAgeCacheControlHeader()
 	{
-		var handler = new DomainMappedStaticFileRequestHandler(
+		var handler = new DomainSpecificStaticFileRequestHandler(
 			new FakeResourceProvider(true),
-			FakeLoggerFactory.CreateDefaultLogger<DomainMappedStaticFileRequestHandler>());
+			FakeLoggerFactory.CreateDefaultLogger<DomainSpecificStaticFileRequestHandler>());
 		var context = FakeInterceptionContextBuilder
 			.CreateBuilder()
 			.Build();
@@ -63,9 +63,9 @@ public class DomainMappedStaticFileRequestHandlerTests
 	[Fact]
 	public async Task InterceptRequestAsync_ProviderIndicatesResourceDoesNotExist_Returns404NotFound()
 	{
-		var handler = new DomainMappedStaticFileRequestHandler(
+		var handler = new DomainSpecificStaticFileRequestHandler(
 			new FakeResourceProvider(false),
-			FakeLoggerFactory.CreateDefaultLogger<DomainMappedStaticFileRequestHandler>());
+			FakeLoggerFactory.CreateDefaultLogger<DomainSpecificStaticFileRequestHandler>());
 		var context = FakeInterceptionContextBuilder
 			.CreateBuilder()
 			.Build();

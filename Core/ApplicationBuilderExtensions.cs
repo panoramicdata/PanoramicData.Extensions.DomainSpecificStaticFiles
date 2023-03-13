@@ -1,4 +1,4 @@
-﻿using PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿using PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -8,13 +8,13 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class ApplicationBuilderExtensions
 {
 	/// <summary>
-	/// Add the domain mapped static file middleware to the request pipeline
+	/// Add the domain specific static file middleware to the request pipeline
 	/// </summary>
 	/// <param name="app">The instance of the interface that we are extending</param>
 	/// <returns>The instance that was extended, to support method chaining</returns>
-	public static IApplicationBuilder UseDomainMappedStaticFiles(this IApplicationBuilder app)
+	public static IApplicationBuilder UseDomainSpecificStaticFiles(this IApplicationBuilder app)
 	{
-		_ = app.UseMiddleware<DomainMappedStaticFileMiddleware>();
+		_ = app.UseMiddleware<DomainSpecificStaticFileMiddleware>();
 
 		return app;
 	}

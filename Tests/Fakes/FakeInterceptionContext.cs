@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Fakes;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Fakes;
 
 internal class FakeInterceptionContext : IInterceptionContext
 {
@@ -12,7 +12,7 @@ internal class FakeInterceptionContext : IInterceptionContext
 
 	public HttpResponse Response => HttpContext.Response;
 
-	public required DomainMappedStaticFileConfiguration Configuration { get; set; }
+	public required DomainSpecificStaticFileConfiguration Configuration { get; set; }
 
 	public string RequestPath { get; set; } = string.Empty;
 

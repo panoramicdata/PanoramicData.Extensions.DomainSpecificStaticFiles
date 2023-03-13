@@ -1,4 +1,4 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Caching;
 
 /// <summary>
 /// The strategy that applies the no cache, no store caching policy

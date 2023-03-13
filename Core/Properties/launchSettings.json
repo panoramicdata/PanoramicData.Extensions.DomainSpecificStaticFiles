@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "PanoramicData.Extensions.DomainMappedStaticFiles": {
+    "PanoramicData.Extensions.DomainSpecificStaticFiles": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

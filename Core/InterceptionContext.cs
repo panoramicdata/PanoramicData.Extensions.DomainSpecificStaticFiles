@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http.Extensions;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 /// <summary>
 /// The context of an interception request
 /// </summary>
 internal class InterceptionContext : IInterceptionContext
 {
-	public InterceptionContext(HttpContext context, DomainMappedStaticFileConfiguration configuration)
+	public InterceptionContext(HttpContext context, DomainSpecificStaticFileConfiguration configuration)
 	{
 		Configuration = configuration;
 		HttpContext = context;
@@ -19,7 +19,7 @@ internal class InterceptionContext : IInterceptionContext
 	/// <summary>
 	/// The configuration with which the mapping is being performed
 	/// </summary>
-	public DomainMappedStaticFileConfiguration Configuration { get; }
+	public DomainSpecificStaticFileConfiguration Configuration { get; }
 
 	/// <summary>
 	/// The underlying HttpContext of the request
@@ -63,6 +63,6 @@ internal class InterceptionContext : IInterceptionContext
 		return requestUri.Host + requestUri.AbsolutePath;
 	}
 
-	private static ResourceMapping? GetResourceMapping(string loweredRequestPath, DomainMappedStaticFileConfiguration configuration)
+	private static ResourceMapping? GetResourceMapping(string loweredRequestPath, DomainSpecificStaticFileConfiguration configuration)
 		=> configuration.GetResourceMapping(loweredRequestPath);
 }

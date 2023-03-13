@@ -1,14 +1,14 @@
 ﻿using FluentAssertions;
-using PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Helpers;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Helpers;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests;
 
-public class DomainMappedStaticFileOptionsTranslatorTests
+public class DomainSpecificStaticFileOptionsTranslatorTests
 {
 	[Fact]
 	public void Translate_SingleRequestMappingSingleDomain_CreatesConfigurationWithOneMapping()
 	{
-		var options = DomainMappedStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
+		var options = DomainSpecificStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
 		{
 			new RequestMapping{ RelativeUrlPrefix="/style/", ResourcePathPrefix = "Style",
 				DomainMappings = new List<DomainMapping>
@@ -18,7 +18,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 			}
 		});
 
-		var result = DomainMappedStaticFileOptionsTranslator.Translate(options);
+		var result = DomainSpecificStaticFileOptionsTranslator.Translate(options);
 
 		result.Should().NotBeNull();
 		result.DomainResourceMappings.Should().HaveCount(1);
@@ -29,7 +29,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 	[Fact]
 	public void Translate_SingleRequestMappingSingleUppercaseDomain_CreatesConfigurationWithOneMappingWithLowercaseUrlPrefix()
 	{
-		var options = DomainMappedStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
+		var options = DomainSpecificStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
 		{
 			new RequestMapping{ RelativeUrlPrefix="/style/", ResourcePathPrefix = "Style",
 				DomainMappings = new List<DomainMapping>
@@ -39,7 +39,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 			}
 		});
 
-		var result = DomainMappedStaticFileOptionsTranslator.Translate(options);
+		var result = DomainSpecificStaticFileOptionsTranslator.Translate(options);
 
 		result.Should().NotBeNull();
 		result.DomainResourceMappings.Should().HaveCount(1);
@@ -59,7 +59,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 	[Fact]
 	public void Translate_SingleRequestMappingWithUppercaseUrlPrefixAndSingleDomain_CreatesConfigurationWithOneMappingWithLowercaseUrlPrefix()
 	{
-		var options = DomainMappedStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
+		var options = DomainSpecificStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
 		{
 			new RequestMapping{ RelativeUrlPrefix="/STYLE/", ResourcePathPrefix = "Style",
 				DomainMappings = new List<DomainMapping>
@@ -69,7 +69,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 			}
 		});
 
-		var result = DomainMappedStaticFileOptionsTranslator.Translate(options);
+		var result = DomainSpecificStaticFileOptionsTranslator.Translate(options);
 
 		result.Should().NotBeNull();
 		result.DomainResourceMappings.Should().HaveCount(1);
@@ -89,7 +89,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 	[Fact]
 	public void Translate_SingleRequestMappingWithNoForwardSlashesInUrlPrefix_CreatesConfigurationWithOneMappingWithNormalisedUrlPrefix()
 	{
-		var options = DomainMappedStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
+		var options = DomainSpecificStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
 		{
 			new RequestMapping{ RelativeUrlPrefix="style", ResourcePathPrefix = "Style",
 				DomainMappings = new List<DomainMapping>
@@ -99,7 +99,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 			}
 		});
 
-		var result = DomainMappedStaticFileOptionsTranslator.Translate(options);
+		var result = DomainSpecificStaticFileOptionsTranslator.Translate(options);
 
 		result.Should().NotBeNull();
 		result.DomainResourceMappings.Should().HaveCount(1);
@@ -119,7 +119,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 	[Fact]
 	public void Translate_SingleRequestMappingWithForwardSlashesInResourcePathPrefix_CreatesConfigurationWithOneMappingWithNormalisedResourcePath()
 	{
-		var options = DomainMappedStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
+		var options = DomainSpecificStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
 		{
 			new RequestMapping{ RelativeUrlPrefix="style", ResourcePathPrefix = "/Style/",
 				DomainMappings = new List<DomainMapping>
@@ -129,7 +129,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 			}
 		});
 
-		var result = DomainMappedStaticFileOptionsTranslator.Translate(options);
+		var result = DomainSpecificStaticFileOptionsTranslator.Translate(options);
 
 		result.Should().NotBeNull();
 		result.DomainResourceMappings.Should().HaveCount(1);
@@ -148,7 +148,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 	[Fact]
 	public void Translate_SingleRequestMappingWithUppercaseResourcePathPrefix_CreatesConfigurationWithOneMappingWithUppercaseResourcePathPrefix()
 	{
-		var options = DomainMappedStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
+		var options = DomainSpecificStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
 		{
 			new RequestMapping{ RelativeUrlPrefix="style", ResourcePathPrefix = "STYLE",
 				DomainMappings = new List<DomainMapping>
@@ -158,7 +158,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 			}
 		});
 
-		var result = DomainMappedStaticFileOptionsTranslator.Translate(options);
+		var result = DomainSpecificStaticFileOptionsTranslator.Translate(options);
 
 		result.Should().NotBeNull();
 		result.DomainResourceMappings.Should().HaveCount(1);
@@ -177,7 +177,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 	[Fact]
 	public void Translate_SingleRequestMappingWithLowercaseResourcePathPrefix_CreatesConfigurationWithOneMappingWithLowercaseResourcePathPrefix()
 	{
-		var options = DomainMappedStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
+		var options = DomainSpecificStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
 		{
 			new RequestMapping{ RelativeUrlPrefix="style", ResourcePathPrefix = "style",
 				DomainMappings = new List<DomainMapping>
@@ -187,7 +187,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 			}
 		});
 
-		var result = DomainMappedStaticFileOptionsTranslator.Translate(options);
+		var result = DomainSpecificStaticFileOptionsTranslator.Translate(options);
 
 		result.Should().NotBeNull();
 		result.DomainResourceMappings.Should().HaveCount(1);
@@ -206,7 +206,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 	[Fact]
 	public void Translate_SingleRequestMappingWithLowercaseResourceSubPath_CreatesConfigurationWithOneMappingWithLowercaseResourceSubPath()
 	{
-		var options = DomainMappedStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
+		var options = DomainSpecificStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
 		{
 			new RequestMapping{ RelativeUrlPrefix="style", ResourcePathPrefix = "/Style/",
 				DomainMappings = new List<DomainMapping>
@@ -216,7 +216,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 			}
 		});
 
-		var result = DomainMappedStaticFileOptionsTranslator.Translate(options);
+		var result = DomainSpecificStaticFileOptionsTranslator.Translate(options);
 
 		result.Should().NotBeNull();
 		result.DomainResourceMappings.Should().HaveCount(1);
@@ -235,7 +235,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 	[Fact]
 	public void Translate_SingleRequestMappingThreeDomains_CreatesConfigurationWithThreeDomainsAndOneMappingEach()
 	{
-		var options = DomainMappedStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
+		var options = DomainSpecificStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
 		{
 			new RequestMapping{ RelativeUrlPrefix="/style/", ResourcePathPrefix = "Style",
 				DomainMappings = new List<DomainMapping>
@@ -247,7 +247,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 			}
 		});
 
-		var result = DomainMappedStaticFileOptionsTranslator.Translate(options);
+		var result = DomainSpecificStaticFileOptionsTranslator.Translate(options);
 
 		result.Should().NotBeNull();
 		result.DomainResourceMappings.Should().HaveCount(3);
@@ -282,7 +282,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 	[Fact]
 	public void Translate_TwoRequestMappingsTwoDomains_CreatesConfigurationWithTwoDomainsAndTwoMappingsEach()
 	{
-		var options = DomainMappedStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
+		var options = DomainSpecificStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
 		{
 			new RequestMapping{ RelativeUrlPrefix="/style/", ResourcePathPrefix = "Style",
 				DomainMappings = new List<DomainMapping>
@@ -300,7 +300,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 			}
 		});
 
-		var result = DomainMappedStaticFileOptionsTranslator.Translate(options);
+		var result = DomainSpecificStaticFileOptionsTranslator.Translate(options);
 
 		result.Should().NotBeNull();
 		result.DomainResourceMappings.Should().HaveCount(2);

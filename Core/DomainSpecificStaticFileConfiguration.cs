@@ -1,11 +1,11 @@
 ﻿using System.Collections.Concurrent;
 
-namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 /// <summary>
-/// Configuration used for interception requests within the DomainMappedStaticFileMiddleware
+/// Configuration used for interception requests within the DomainSpecificStaticFileMiddleware
 /// </summary>
-public class DomainMappedStaticFileConfiguration
+public class DomainSpecificStaticFileConfiguration
 {
 	private readonly ConcurrentDictionary<string, IList<ResourceMapping>> _domainResourceMappings = new();
 

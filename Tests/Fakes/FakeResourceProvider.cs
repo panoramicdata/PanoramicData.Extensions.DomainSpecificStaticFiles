@@ -1,4 +1,4 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles.Tests.Fakes;
+﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Fakes;
 
 internal class FakeResourceProvider : IResourceProvider
 {
