@@ -38,5 +38,4 @@ public class DomainMapping
 	/// An override for a custom caching policy for resources matching this mapping
 	/// </summary>
 	public ICachingPolicy? OverrideCachingPolicy { get; set; }
-
 }

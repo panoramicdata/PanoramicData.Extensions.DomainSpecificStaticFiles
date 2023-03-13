@@ -11,7 +11,7 @@
 		<Authors>Panoramic Data Limited</Authors>
 		<Company>Panoramic Data Limited</Company>
 		<Copyright>Copyright © Panoramic Data Limited 2023</Copyright>
-		<PackageProjectUrl>https://github.com/panoramicdata/DomainSpecificStaticFiles/</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/panoramicdata/PanoramicData.Extensions.DomainSpecificStaticFiles/</PackageProjectUrl>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<PackageTags>Domain Domain-specific Static Files</PackageTags>
 		<Title>PanoramicData.Extensions.DomainSpecificStaticFiles</Title>
@@ -19,7 +19,7 @@
 		<Summary>A .NET package that supports serving static files that vary by domain</Summary>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/panoramicdata/DomainSpecificStaticFiles/</RepositoryUrl>
+		<RepositoryUrl>https://github.com/panoramicdata/PanoramicData.Extensions.DomainSpecificStaticFiles/</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<IncludeSymbols>true</IncludeSymbols>
