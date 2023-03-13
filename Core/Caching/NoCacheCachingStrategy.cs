@@ -7,6 +7,6 @@ internal class NoCacheCachingStrategy : ICachingStrategy
 {
 	/// <inheritdoc/>
 	public void WriteCacheHeaders(IInterceptionContext interceptionContext, ResourceContentAccessor resourceContentAccessor)
-		=> interceptionContext.HttpContext.Response.Headers.CacheControl =
+		=> interceptionContext.Response.Headers.CacheControl =
 			(Microsoft.Extensions.Primitives.StringValues)"no-cache";
 }

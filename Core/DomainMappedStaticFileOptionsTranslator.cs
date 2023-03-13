@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 
 internal static class DomainMappedStaticFileOptionsTranslator
 {
@@ -37,8 +35,8 @@ internal static class DomainMappedStaticFileOptionsTranslator
 
 	private static string CombineRequestPathParts(string pathPrefix, string pathSuffix)
 	{
-		pathPrefix = pathPrefix.ToLower(CultureInfo.InvariantCulture);
-		pathSuffix = pathSuffix.ToLower(CultureInfo.InvariantCulture);
+		pathPrefix = pathPrefix.ToLowerInvariant();
+		pathSuffix = pathSuffix.ToLowerInvariant();
 
 		return CombinePathParts(pathPrefix, pathSuffix);
 	}

@@ -20,11 +20,9 @@ internal class MaxAgeCachingStrategy : ICachingStrategy
 	/// <inheritdoc/>
 	public void WriteCacheHeaders(IInterceptionContext interceptionContext, ResourceContentAccessor resourceContentAccessor)
 	{
-		var response = interceptionContext.HttpContext.Response;
-
 		// Add caching headers
 		var cachingPeriodSeconds = _cachingPolicy.CachingPeriod.TotalSeconds;
-		response.Headers.CacheControl = cachingPeriodSeconds > 0
+		interceptionContext.Response.Headers.CacheControl = cachingPeriodSeconds > 0
 			? (Microsoft.Extensions.Primitives.StringValues)$"max-age={cachingPeriodSeconds:F0}"
 			: (Microsoft.Extensions.Primitives.StringValues)"no-cache";
 	}

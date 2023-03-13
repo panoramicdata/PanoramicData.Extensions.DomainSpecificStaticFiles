@@ -31,7 +31,7 @@ internal class DomainMappedStaticFileRequestHandler
 		{
 			// No matching resource found!
 			_logger.LogInformation("Interception of static resource request failed - {Uri} not found", interceptionContext.RequestPath);
-			interceptionContext.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+			interceptionContext.Response.StatusCode = StatusCodes.Status404NotFound;
 			return;
 		}
 
@@ -47,7 +47,7 @@ internal class DomainMappedStaticFileRequestHandler
 	/// <param name="resourceContentAccessor">The accessor used to retrieve the contents of the resource</param>
 	private static async Task WriteResponseAsync(IInterceptionContext interceptionContext, ResourceContentAccessor resourceContentAccessor, CancellationToken cancellationToken)
 	{
-		var response = interceptionContext.HttpContext.Response;
+		var response = interceptionContext.Response;
 		response.StatusCode = StatusCodes.Status200OK;
 		response.ContentType = resourceContentAccessor.MimeType;
 

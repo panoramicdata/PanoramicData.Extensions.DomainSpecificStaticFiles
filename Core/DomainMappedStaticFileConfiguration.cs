@@ -12,18 +12,18 @@ public class DomainMappedStaticFileConfiguration
 	/// <summary>
 	/// Get the resource mapping associated with the requested path, or null if no mapping exists
 	/// </summary>
-	/// <param name="requestPath">The path of the request whose mapping we are trying to find</param>
+	/// <param name="loweredRequestPath">The lowercase path of the request whose mapping we are trying to find</param>
 	/// <returns>The mapping that is to be used in interception, or null if no interception is appropriate</returns>
-	internal ResourceMapping? GetResourceMapping(string requestPath)
+	internal ResourceMapping? GetResourceMapping(string loweredRequestPath)
 	{
-		// Do very fast lookups of mappings in a case-insensitive manner by forcing Url to lowercase
-		var host = GetHost(requestPath);
+		// Do very fast lookups of mappings in a case-insensitive manner by using lowercase Url
+		var host = GetHost(loweredRequestPath);
 		if (!_domainResourceMappings.TryGetValue(host, out var resourceMappings))
 		{
 			return null;
 		}
 
-		var resourceMapping = resourceMappings.FirstOrDefault(m => requestPath.StartsWith(m.RequestUrlPrefix, StringComparison.Ordinal));
+		var resourceMapping = resourceMappings.FirstOrDefault(m => loweredRequestPath.StartsWith(m.RequestUrlPrefix, StringComparison.Ordinal));
 		return resourceMapping;
 	}
 
@@ -34,6 +34,7 @@ public class DomainMappedStaticFileConfiguration
 	/// <param name="resourceMapping">The mapping to be performed</param>
 	internal void AddResourceMapping(string domain, ResourceMapping resourceMapping)
 	{
+		domain = domain.ToLowerInvariant();
 		if (!_domainResourceMappings.ContainsKey(domain))
 		{
 			_domainResourceMappings.TryAdd(domain, new List<ResourceMapping>());
@@ -41,6 +42,11 @@ public class DomainMappedStaticFileConfiguration
 
 		_domainResourceMappings[domain].Add(resourceMapping);
 	}
+
+	/// <summary>
+	/// The dictionary of mappings, exposed to enable unit testing of the translator
+	/// </summary>
+	internal IDictionary<string, IList<ResourceMapping>> DomainResourceMappings => _domainResourceMappings;
 
 	/// <summary>
 	/// The type used to access and serve resources

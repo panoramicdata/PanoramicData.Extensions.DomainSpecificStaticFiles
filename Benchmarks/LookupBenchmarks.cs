@@ -43,7 +43,7 @@ public class LookupBenchmarks
 	private RequestMapping? LookupFromHashedDictionary(string requestUrl)
 	{
 		var uri = new Uri(requestUrl);
-		var hash = SHA256.HashData(Encoding.UTF8.GetBytes(uri.Host.ToLower()));
+		var hash = SHA256.HashData(Encoding.UTF8.GetBytes(uri.Host.ToLowerInvariant()));
 		var lookupPath = uri.Host + "/" + uri.AbsoluteUri;
 		return _hashedMappingsDictionary.TryGetValue(hash, out var mappings)
 			? mappings.FirstOrDefault(m => lookupPath.StartsWith(uri.Host + m.RequestPathPrefix))
@@ -52,7 +52,7 @@ public class LookupBenchmarks
 
 	private RequestMapping? LookupFromCaseSensitiveDictionary(string requestUrl)
 	{
-		var uri = new Uri(requestUrl.ToLower());
+		var uri = new Uri(requestUrl.ToLowerInvariant());
 		var lookupPath = uri.Host + "/" + uri.AbsoluteUri;
 		return _caseSensitiveMappingsDictionary.TryGetValue(uri.Host, out var mappings)
 			? mappings.FirstOrDefault(m => lookupPath.StartsWith(uri.Host + m.RequestPathPrefix))

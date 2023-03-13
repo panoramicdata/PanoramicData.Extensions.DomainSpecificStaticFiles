@@ -8,9 +8,15 @@ internal class FakeInterceptionContext : IInterceptionContext
 
 	public required HttpContext HttpContext { get; set; }
 
+	public HttpRequest Request => HttpContext.Request;
+
+	public HttpResponse Response => HttpContext.Response;
+
 	public required DomainMappedStaticFileConfiguration Configuration { get; set; }
 
 	public string RequestPath { get; set; } = string.Empty;
+
+	public string LoweredRequestPath => RequestPath.ToLowerInvariant();
 
 	public ResourceMapping? ResourceMapping { get; set; }
 }

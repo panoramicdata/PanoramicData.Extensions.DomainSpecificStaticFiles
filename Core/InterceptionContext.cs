@@ -12,7 +12,8 @@ internal class InterceptionContext : IInterceptionContext
 		Configuration = configuration;
 		HttpContext = context;
 		RequestPath = GetRequestPath(context);
-		ResourceMapping = GetResourceMapping(RequestPath, Configuration);
+		LoweredRequestPath = RequestPath.ToLowerInvariant();
+		ResourceMapping = GetResourceMapping(LoweredRequestPath, Configuration);
 	}
 
 	/// <summary>
@@ -26,9 +27,24 @@ internal class InterceptionContext : IInterceptionContext
 	public HttpContext HttpContext { get; }
 
 	/// <summary>
-	/// The request path used for lookups and conversions
+	/// The request that is being handled
+	/// </summary>
+	public HttpRequest Request => HttpContext.Request;
+
+	/// <summary>
+	/// The response that is being generated
+	/// </summary>
+	public HttpResponse Response => HttpContext.Response;
+
+	/// <summary>
+	/// The original request path used for resource discovery
 	/// </summary>
 	public string RequestPath { get; }
+
+	/// <summary>
+	/// The lowercase request path used for lookups and conversions
+	/// </summary>
+	public string LoweredRequestPath { get; }
 
 	/// <summary>
 	/// The mapping for this request, or null if it cannot be intercepted
@@ -47,6 +63,6 @@ internal class InterceptionContext : IInterceptionContext
 		return requestUri.Host + requestUri.AbsolutePath;
 	}
 
-	private static ResourceMapping? GetResourceMapping(string requestPath, DomainMappedStaticFileConfiguration configuration)
-		=> configuration.GetResourceMapping(requestPath);
+	private static ResourceMapping? GetResourceMapping(string loweredRequestPath, DomainMappedStaticFileConfiguration configuration)
+		=> configuration.GetResourceMapping(loweredRequestPath);
 }
