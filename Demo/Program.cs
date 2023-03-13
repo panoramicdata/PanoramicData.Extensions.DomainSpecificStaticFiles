@@ -41,10 +41,10 @@ public class Program
 			new RequestMapping()
 			{
 				RelativeUrlPrefix = "style",
-				ResourceContainer = "Style",
+				ResourcePathPrefix = "Style",
 				DomainMappings = new()
 				{
-					new DomainMapping { Domain = "localhost", ResourceSubContainer = "Default" }
+					new DomainMapping { Domain = "localhost", ResourceSubPath = "Default" }
 				}
 			}
 		};

@@ -22,12 +22,12 @@ internal static class DomainMappedStaticFileOptionsTranslator
 			foreach (var domainMapping in requestMapping.DomainMappings)
 			{
 				var requestPath = CombineRequestPathParts(domainMapping.Domain, requestMapping.RelativeUrlPrefix);
-				var resourcePath = CombinePathParts(requestMapping.ResourceContainer, domainMapping.ResourceSubContainer);
+				var resourcePath = CombinePathParts(requestMapping.ResourcePathPrefix, domainMapping.ResourceSubPath);
 				configuration.AddResourceMapping(domainMapping.Domain, new ResourceMapping
 				{
 					RequestUrlPrefix = requestPath,
 					ResourcePath = resourcePath,
-					CachingPolicy = requestMapping.OverrideCachingPolicy ?? options.DefaultCachingPolicy
+					CachingPolicy = domainMapping.OverrideCachingPolicy ?? requestMapping.OverrideCachingPolicy ?? options.DefaultCachingPolicy
 				});
 			}
 		}

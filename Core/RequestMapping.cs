@@ -18,7 +18,7 @@ public class RequestMapping
 	public RequestMapping(string relativeUrlPrefix, string resourcePathPrefix)
 	{
 		RelativeUrlPrefix = relativeUrlPrefix;
-		ResourceContainer = resourcePathPrefix;
+		ResourcePathPrefix = resourcePathPrefix;
 	}
 
 	/// <summary>
@@ -32,7 +32,7 @@ public class RequestMapping
 	/// <remarks>
 	/// Note that this is usually case-sensitive, especially on Linux
 	/// </remarks>
-	public string ResourceContainer { get; set; } = string.Empty;
+	public string ResourcePathPrefix { get; set; } = string.Empty;
 
 	/// <summary>
 	/// An override for a custom caching policy for this resource

@@ -1,4 +1,6 @@
-﻿namespace PanoramicData.Extensions.DomainMappedStaticFiles;
+﻿using PanoramicData.Extensions.DomainMappedStaticFiles.Caching;
+
+namespace PanoramicData.Extensions.DomainMappedStaticFiles;
 
 public class DomainMapping
 {
@@ -16,7 +18,7 @@ public class DomainMapping
 	public DomainMapping(string domain, string resourceSubContainer)
 	{
 		Domain = domain;
-		ResourceSubContainer = resourceSubContainer;
+		ResourceSubPath = resourceSubContainer;
 	}
 
 	/// <summary>
@@ -25,10 +27,16 @@ public class DomainMapping
 	public required string Domain { get; set; } = string.Empty;
 
 	/// <summary>
-	/// The subcontainer (such as the folder) in which the resources for this domain reside
+	/// The subpath (such as the name of a folder) in which the resources for this domain reside
 	/// </summary>
 	/// <remarks>
 	/// Note that this is usually case-sensitive, especially on Linux
 	/// </remarks>
-	public required string ResourceSubContainer { get; set; } = string.Empty;
+	public required string ResourceSubPath { get; set; } = string.Empty;
+
+	/// <summary>
+	/// An override for a custom caching policy for resources matching this mapping
+	/// </summary>
+	public ICachingPolicy? OverrideCachingPolicy { get; set; }
+
 }
