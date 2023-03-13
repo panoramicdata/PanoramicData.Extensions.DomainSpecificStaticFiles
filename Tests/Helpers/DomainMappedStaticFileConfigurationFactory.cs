@@ -11,7 +11,7 @@ internal static class DomainMappedStaticFileConfigurationFactory
 		{
 			RequestUrlPrefix = "localhost",
 			ResourcePath = "Style/Default",
-			CachingPolicy = new NoCacheCachingPolicy()
+			CachingPolicy = new MaxAgeCachingPolicy()
 		});
 
 		return configuration;
