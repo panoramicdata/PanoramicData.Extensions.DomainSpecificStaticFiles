@@ -233,7 +233,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 	}
 
 	[Fact]
-	public void Translate_SingleRequestMappingTwoDomains_CreatesConfigurationWithTwoDomainsAndOneMappingEach()
+	public void Translate_SingleRequestMappingThreeDomains_CreatesConfigurationWithThreeDomainsAndOneMappingEach()
 	{
 		var options = DomainMappedStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
 		{
@@ -242,6 +242,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 				{
 					new DomainMapping { Domain = "site.domain1.com", ResourceSubPath = "Default" },
 					new DomainMapping { Domain = "site.domain2.com", ResourceSubPath = "Alternative" },
+					new DomainMapping { Domain = "site.domain3.com", ResourceSubPath = "Default" },
 				}
 			}
 		});
@@ -249,7 +250,7 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 		var result = DomainMappedStaticFileOptionsTranslator.Translate(options);
 
 		result.Should().NotBeNull();
-		result.DomainResourceMappings.Should().HaveCount(2);
+		result.DomainResourceMappings.Should().HaveCount(3);
 		result.DomainResourceMappings.Keys.Should().Contain("site.domain1.com");
 
 		var domainMapping = result.DomainResourceMappings["site.domain1.com"];
@@ -268,5 +269,68 @@ public class DomainMappedStaticFileOptionsTranslatorTests
 		resourceMapping.Should().NotBeNull();
 		resourceMapping.RequestUrlPrefix.Should().Be("site.domain2.com/style/");
 		resourceMapping.ResourcePath.Should().Be("Style/Alternative/");
+
+		result.DomainResourceMappings.Keys.Should().Contain("site.domain3.com");
+		domainMapping = result.DomainResourceMappings["site.domain3.com"];
+		domainMapping.Should().HaveCount(1);
+		resourceMapping = domainMapping[0];
+		resourceMapping.Should().NotBeNull();
+		resourceMapping.RequestUrlPrefix.Should().Be("site.domain3.com/style/");
+		resourceMapping.ResourcePath.Should().Be("Style/Default/");
+	}
+
+	[Fact]
+	public void Translate_TwoRequestMappingsTwoDomains_CreatesConfigurationWithTwoDomainsAndTwoMappingsEach()
+	{
+		var options = DomainMappedStaticFileOptionsFactory.CreateOptions(new List<RequestMapping>
+		{
+			new RequestMapping{ RelativeUrlPrefix="/style/", ResourcePathPrefix = "Style",
+				DomainMappings = new List<DomainMapping>
+				{
+					new DomainMapping { Domain = "site.domain1.com", ResourceSubPath = "Default" },
+					new DomainMapping { Domain = "site.domain2.com", ResourceSubPath = "Alternative" },
+				}
+			},
+			new RequestMapping{ RelativeUrlPrefix="/substance/", ResourcePathPrefix = "Substance",
+				DomainMappings = new List<DomainMapping>
+				{
+					new DomainMapping { Domain = "site.domain1.com", ResourceSubPath = "SubstanceA" },
+					new DomainMapping { Domain = "site.domain2.com", ResourceSubPath = "SubstanceB" },
+				}
+			}
+		});
+
+		var result = DomainMappedStaticFileOptionsTranslator.Translate(options);
+
+		result.Should().NotBeNull();
+		result.DomainResourceMappings.Should().HaveCount(2);
+
+		result.DomainResourceMappings.Keys.Should().Contain("site.domain1.com");
+		var domainMapping = result.DomainResourceMappings["site.domain1.com"];
+		domainMapping.Should().HaveCount(2);
+
+		var resourceMapping = domainMapping[0];
+		resourceMapping.Should().NotBeNull();
+		resourceMapping.RequestUrlPrefix.Should().Be("site.domain1.com/style/");
+		resourceMapping.ResourcePath.Should().Be("Style/Default/");
+
+		resourceMapping = domainMapping[1];
+		resourceMapping.Should().NotBeNull();
+		resourceMapping.RequestUrlPrefix.Should().Be("site.domain1.com/substance/");
+		resourceMapping.ResourcePath.Should().Be("Substance/SubstanceA/");
+
+		result.DomainResourceMappings.Keys.Should().Contain("site.domain2.com");
+		domainMapping = result.DomainResourceMappings["site.domain2.com"];
+		domainMapping.Should().HaveCount(2);
+
+		resourceMapping = domainMapping[0];
+		resourceMapping.Should().NotBeNull();
+		resourceMapping.RequestUrlPrefix.Should().Be("site.domain2.com/style/");
+		resourceMapping.ResourcePath.Should().Be("Style/Alternative/");
+
+		resourceMapping = domainMapping[1];
+		resourceMapping.Should().NotBeNull();
+		resourceMapping.RequestUrlPrefix.Should().Be("site.domain2.com/substance/");
+		resourceMapping.ResourcePath.Should().Be("Substance/SubstanceB/");
 	}
 }
