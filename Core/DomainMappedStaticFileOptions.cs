@@ -10,7 +10,7 @@ public class DomainMappedStaticFileOptions
 	/// <summary>
 	/// The mappings for requests that we are to intercept
 	/// </summary>
-	public IEnumerable<RequestMapping> RequestMappings { get; set; } = Enumerable.Empty<RequestMapping>();
+	public IList<RequestMapping> RequestMappings { get; set; } = new List<RequestMapping>();
 
 	/// <summary>
 	/// The default caching policy that is to be applied to responses

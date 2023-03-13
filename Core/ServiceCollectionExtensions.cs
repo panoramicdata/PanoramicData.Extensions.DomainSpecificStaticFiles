@@ -11,15 +11,6 @@ public static class ServiceCollectionExtensions
 	/// Add the types necessary to serve static domain mapped files
 	/// </summary>
 	/// <param name="services">The service collection instance on which we are to operate</param>
-	/// <param name="requestMappings">The request mappings to be used in serving resources</param>
-	/// <returns>The instance being extended, to support method chaining</returns>
-	public static IServiceCollection AddDomainMappedStaticFiles(this IServiceCollection services, IConfiguration configuration, IEnumerable<RequestMapping> requestMappings)
-		=> AddDomainMappedStaticFiles(services, configuration, t => t.RequestMappings = requestMappings);
-
-	/// <summary>
-	/// Add the types necessary to serve static domain mapped files
-	/// </summary>
-	/// <param name="services">The service collection instance on which we are to operate</param>
 	/// <param name="config">The configuration action to be applied to the options that are to be used for serving resources</param>
 	/// <returns>The instance being extended, to support method chaining</returns>
 	public static IServiceCollection AddDomainMappedStaticFiles(this IServiceCollection services, IConfiguration configuration, Action<DomainMappedStaticFileOptions> config)

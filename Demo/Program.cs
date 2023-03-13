@@ -10,7 +10,7 @@ public class Program
 		builder.Services.AddRazorPages();
 		builder.Services.AddServerSideBlazor();
 
-		builder.Services.AddDomainMappedStaticFiles(builder.Configuration, GetRequestMappings());
+		builder.Services.AddDomainMappedStaticFiles(builder.Configuration, GetDomainMappedStaticFileOptionsAction());
 
 		var app = builder.Build();
 
@@ -35,10 +35,9 @@ public class Program
 		app.Run();
 	}
 
-	private static IEnumerable<RequestMapping> GetRequestMappings()
-		=> new List<RequestMapping>()
-		{
-			new RequestMapping()
+	private static Action<DomainMappedStaticFileOptions> GetDomainMappedStaticFileOptionsAction()
+		=> (options) => options.RequestMappings.Add(
+			new()
 			{
 				RelativeUrlPrefix = "style",
 				ResourcePathPrefix = "Style",
@@ -46,7 +45,6 @@ public class Program
 				{
 					new DomainMapping { Domain = "localhost", ResourceSubPath = "Default" }
 				}
-			}
-		};
+			});
 }
 

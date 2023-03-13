@@ -17,6 +17,6 @@ internal static class DomainMappedStaticFileOptionsFactory
 	public static DomainMappedStaticFileOptions CreateOptions(IEnumerable<RequestMapping> requestMappings)
 		=> new()
 		{
-			RequestMappings = requestMappings
+			RequestMappings = new List<RequestMapping>(requestMappings)
 		};
 }
