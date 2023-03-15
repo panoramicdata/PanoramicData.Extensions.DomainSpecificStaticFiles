@@ -26,7 +26,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
 		<!-- Update the following before releasing to nuget -->
-		<PackageReleaseNotes>Additional debugging information when resources are not found.</PackageReleaseNotes>
+		<PackageReleaseNotes>Resolve failure to calculate the correct content path on Linux.</PackageReleaseNotes>
 
 	</PropertyGroup>
 

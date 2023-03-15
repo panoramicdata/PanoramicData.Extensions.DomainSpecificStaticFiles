@@ -108,7 +108,13 @@ internal class PhysicalFileResourceProvider : IResourceProvider
 			resourcePath = resourcePath[1..];
 		}
 
-		var fullResourcePath = Path.Combine(_environment.ContentRootPath, resourcePath);
+		var contentRootPath = _environment.ContentRootPath;
+		if (!contentRootPath.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+		{
+			contentRootPath += "/";
+		}
+
+		var fullResourcePath = contentRootPath + resourcePath;
 		return fullResourcePath;
 	}
 
