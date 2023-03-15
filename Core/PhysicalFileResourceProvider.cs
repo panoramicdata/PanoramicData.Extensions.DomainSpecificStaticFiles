@@ -28,7 +28,7 @@ internal class PhysicalFileResourceProvider : IResourceProvider
 		var fullResourcePath = GetFullFilePath(resourcePath);
 		if (!File.Exists(fullResourcePath))
 		{
-			_logger.LogInformation("Physical file provider: no file found at path '{ResourcePath}'", resourcePath);
+			_logger.LogInformation("Physical file provider: no file found at path '{ResourcePath}'", fullResourcePath);
 			return Task.FromResult(new ResourceInfo
 			{
 				Exists = false,
