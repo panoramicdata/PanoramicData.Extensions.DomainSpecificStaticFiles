@@ -26,7 +26,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
 		<!-- Update the following before releasing to nuget -->
-		<PackageReleaseNotes>Initial package creation.</PackageReleaseNotes>
+		<PackageReleaseNotes>Additional debugging information when resources are not found.</PackageReleaseNotes>
 
 	</PropertyGroup>
 
