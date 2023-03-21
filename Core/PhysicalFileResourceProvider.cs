@@ -60,7 +60,7 @@ internal class PhysicalFileResourceProvider : IResourceProvider
 		_ = new FileExtensionContentTypeProvider().TryGetContentType(resourceInfo.ResourcePath, out var mimeType);
 		mimeType ??= "application/octet-stream";
 
-		return Task.FromResult(new ResourceContentAccessor()
+		return Task.FromResult(new ResourceContentAccessor
 		{
 			ResourceInfo = resourceInfo,
 			ResourceProvider = this,

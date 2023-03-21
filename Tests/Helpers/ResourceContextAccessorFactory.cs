@@ -6,7 +6,7 @@ internal static class ResourceContextAccessorFactory
 {
 	public static ResourceContentAccessor CreateDefaultContentAccessor()
 	{
-		var resourceInfo = new ResourceInfo()
+		var resourceInfo = new ResourceInfo
 		{
 			ResourcePath = "localhost/images/favicon.png",
 			Exists = true

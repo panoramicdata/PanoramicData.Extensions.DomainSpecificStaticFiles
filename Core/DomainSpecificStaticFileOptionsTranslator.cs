@@ -10,7 +10,7 @@ internal static class DomainSpecificStaticFileOptionsTranslator
 	/// <returns>The configuration that results from the options from the developer</returns>
 	public static DomainSpecificStaticFileConfiguration Translate(DomainSpecificStaticFileOptions options)
 	{
-		var configuration = new DomainSpecificStaticFileConfiguration()
+		var configuration = new DomainSpecificStaticFileConfiguration
 		{
 			ResourceProviderType = options.ResourceProviderType,
 		};

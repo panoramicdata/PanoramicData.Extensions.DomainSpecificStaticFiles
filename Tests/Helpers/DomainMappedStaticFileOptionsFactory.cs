@@ -4,7 +4,7 @@ internal static class DomainSpecificStaticFileOptionsFactory
 	public static DomainSpecificStaticFileOptions CreateDefaultOptions()
 		=> new()
 		{
-			RequestMappings = new List<RequestMapping>()
+			RequestMappings = new List<RequestMapping>
 			{
 				new RequestMapping
 				{

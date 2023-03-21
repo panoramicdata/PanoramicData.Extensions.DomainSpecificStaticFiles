@@ -88,7 +88,7 @@ public class LookupBenchmarks
 				var hash = SHA256.HashData(Encoding.UTF8.GetBytes($"{environment}.domain{index}.com"));
 				mappings.TryAdd(hash, new List<RequestMapping>
 				{
-					new RequestMapping()
+					new RequestMapping
 					{
 						RequestPathPrefix = "/style/",
 						ResourcePath = $"Style/Domain{index}/"
@@ -110,7 +110,7 @@ public class LookupBenchmarks
 			{
 				mappings.TryAdd($"{environment}.domain{index}.com", new List<RequestMapping>
 				{
-					new RequestMapping()
+					new RequestMapping
 					{
 						RequestPathPrefix = "/style/",
 						ResourcePath = $"Style/Domain{index}/"
@@ -132,7 +132,7 @@ public class LookupBenchmarks
 			{
 				mappings.TryAdd($"{environment}.domain{index}.com", new List<RequestMapping>
 				{
-					new RequestMapping()
+					new RequestMapping
 					{
 						RequestPathPrefix = "/style/",
 						ResourcePath = $"Style/Domain{index}/"

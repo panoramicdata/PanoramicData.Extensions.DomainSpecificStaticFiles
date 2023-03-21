@@ -10,7 +10,7 @@ public class ResourcePathCalculatorTests
 	public void GetResourcePath_RequestUrlPrefixEndsWithForwardSlash_CalculatesCorrectPath()
 	{
 		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>()
+			new List<(string Domain, ResourceMapping ResourceMapping)>
 			{
 				new (){
 					Domain = "localhost",
@@ -34,7 +34,7 @@ public class ResourcePathCalculatorTests
 	public void GetResourcePath_RequestUrlPrefixDoesNotEndWithForwardSlash_CalculatesCorrectPath()
 	{
 		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>()
+			new List<(string Domain, ResourceMapping ResourceMapping)>
 			{
 				new (){
 					Domain = "localhost",
@@ -58,7 +58,7 @@ public class ResourcePathCalculatorTests
 	public void GetResourcePath_ResourcePathStartsAndEndsWithForwardSlash_CalculatesCorrectPath()
 	{
 		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>()
+			new List<(string Domain, ResourceMapping ResourceMapping)>
 			{
 				new (){
 					Domain = "localhost",
@@ -82,7 +82,7 @@ public class ResourcePathCalculatorTests
 	public void GetResourcePath_ResourcePathDoesNotStartWithForwardSlash_CalculatesCorrectPath()
 	{
 		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>()
+			new List<(string Domain, ResourceMapping ResourceMapping)>
 			{
 				new (){
 					Domain = "localhost",
@@ -106,7 +106,7 @@ public class ResourcePathCalculatorTests
 	public void GetResourcePath_ResourcePathEndsWithForwardSlash_CalculatesCorrectPath()
 	{
 		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>()
+			new List<(string Domain, ResourceMapping ResourceMapping)>
 			{
 				new (){
 					Domain = "localhost",
@@ -130,7 +130,7 @@ public class ResourcePathCalculatorTests
 	public void GetResourcePath_ResourcePathDoesNotEndWithForwardSlash_CalculatesCorrectPath()
 	{
 		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>()
+			new List<(string Domain, ResourceMapping ResourceMapping)>
 			{
 				new (){
 					Domain = "localhost",
@@ -162,7 +162,7 @@ public class ResourcePathCalculatorTests
 	public void GetResourcePath_WithNoMatchingRequestMapping_ThrowsArgumentNullException()
 	{
 		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>()
+			new List<(string Domain, ResourceMapping ResourceMapping)>
 			{
 				new (){
 					Domain = "localhost",
