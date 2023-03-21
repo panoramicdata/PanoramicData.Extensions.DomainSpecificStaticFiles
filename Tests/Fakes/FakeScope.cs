@@ -2,5 +2,8 @@
 
 internal class FakeScope : IDisposable
 {
-	public void Dispose() { }
+	public void Dispose()
+	{
+		// No implementation required in this fake class
+	}
 }

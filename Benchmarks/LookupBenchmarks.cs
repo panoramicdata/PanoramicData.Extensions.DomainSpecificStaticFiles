@@ -81,12 +81,12 @@ public class LookupBenchmarks
 	{
 		var mappings = new ConcurrentDictionary<byte[], List<RequestMapping>>();
 
-		foreach (var environment in new List<string>() { "production", "test" })
+		foreach (var environment in new List<string> { "production", "test" })
 		{
 			foreach (var index in Enumerable.Range(1, 25))
 			{
 				var hash = SHA256.HashData(Encoding.UTF8.GetBytes($"{environment}.domain{index}.com"));
-				mappings.TryAdd(hash, new List<RequestMapping>()
+				mappings.TryAdd(hash, new List<RequestMapping>
 				{
 					new RequestMapping()
 					{
@@ -104,11 +104,11 @@ public class LookupBenchmarks
 	{
 		var mappings = new ConcurrentDictionary<string, List<RequestMapping>>(StringComparer.InvariantCultureIgnoreCase);
 
-		foreach (var environment in new List<string>() { "production", "test" })
+		foreach (var environment in new List<string> { "production", "test" })
 		{
 			foreach (var index in Enumerable.Range(1, 25))
 			{
-				mappings.TryAdd($"{environment}.domain{index}.com", new List<RequestMapping>()
+				mappings.TryAdd($"{environment}.domain{index}.com", new List<RequestMapping>
 				{
 					new RequestMapping()
 					{
@@ -126,11 +126,11 @@ public class LookupBenchmarks
 	{
 		var mappings = new ConcurrentDictionary<string, List<RequestMapping>>();
 
-		foreach (var environment in new List<string>() { "production", "test" })
+		foreach (var environment in new List<string> { "production", "test" })
 		{
 			foreach (var index in Enumerable.Range(1, 25))
 			{
-				mappings.TryAdd($"{environment}.domain{index}.com", new List<RequestMapping>()
+				mappings.TryAdd($"{environment}.domain{index}.com", new List<RequestMapping>
 				{
 					new RequestMapping()
 					{
@@ -148,7 +148,7 @@ public class LookupBenchmarks
 	{
 		var mappings = new List<RequestMapping>();
 
-		foreach (var environment in new List<string>() { "production", "test" })
+		foreach (var environment in new List<string> { "production", "test" })
 		{
 			foreach (var index in Enumerable.Range(1, 25))
 			{

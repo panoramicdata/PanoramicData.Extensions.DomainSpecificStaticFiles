@@ -32,7 +32,7 @@ internal class FakeInterceptionContextBuilder
 		return this;
 	}
 
-	public IInterceptionContext Build() => new FakeInterceptionContext()
+	public IInterceptionContext Build() => new FakeInterceptionContext
 	{
 		RequestPath = _requestPath,
 		Configuration = _configuration,
