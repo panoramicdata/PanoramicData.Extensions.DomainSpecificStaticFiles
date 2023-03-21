@@ -17,8 +17,11 @@ internal static class DomainSpecificStaticFileOptionsTranslator
 
 		foreach (var requestMapping in options.RequestMappings)
 		{
+			var existingDomains = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 			foreach (var domainMapping in requestMapping.DomainMappings)
 			{
+				ValidateDomainMapping(existingDomains, domainMapping);
+
 				var requestPath = CombineRequestPathParts(domainMapping.Domain, requestMapping.RelativeUrlPrefix);
 				var resourcePath = CombinePathParts(requestMapping.ResourcePathPrefix, domainMapping.ResourceSubPath);
 				configuration.AddResourceMapping(domainMapping.Domain, new ResourceMapping
@@ -31,6 +34,16 @@ internal static class DomainSpecificStaticFileOptionsTranslator
 		}
 
 		return configuration;
+	}
+
+	private static void ValidateDomainMapping(HashSet<string> existingDomains, DomainMapping domainMapping)
+	{
+		if (existingDomains.Contains(domainMapping.Domain))
+		{
+			throw new ArgumentException($"Duplicate registration found for domain {domainMapping.Domain}!");
+		}
+
+		existingDomains.Add(domainMapping.Domain);
 	}
 
 	private static string CombineRequestPathParts(string pathPrefix, string pathSuffix)
