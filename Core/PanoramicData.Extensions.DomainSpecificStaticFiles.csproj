@@ -26,7 +26,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
 		<!-- Update the following before releasing to nuget -->
-		<PackageReleaseNotes>Added validation, checking for duplicate domain registrations in a single request mapping.</PackageReleaseNotes>
+		<PackageReleaseNotes>Added debug messages for diagnosing issues with requests that are not handled.</PackageReleaseNotes>
 
 	</PropertyGroup>
 
