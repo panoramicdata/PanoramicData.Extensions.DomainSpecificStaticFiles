@@ -37,6 +37,19 @@ internal class DomainSpecificStaticFileMiddleware : IMiddleware
 		}
 
 		// This is not a request we are responsible for
+		LogNonInterceptedRequest(interceptionContext);
 		await next.Invoke(context);
+	}
+
+	/// <summary>
+	/// Log a debug message to indicate that the current request was not handled
+	/// </summary>
+	/// <param name="interceptionContext">The context of the interception request</param>
+	private void LogNonInterceptedRequest(InterceptionContext interceptionContext)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("DomainSpecificStaticFileMiddleware: Request not handled: {RequestUrl}", interceptionContext.RequestPath);
+		}
 	}
 }
