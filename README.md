@@ -113,3 +113,51 @@ The demo website includes userSecrets.example.json which can be copied and paste
 override configuration.
 
 At this time, only request mapping overrides are loaded from configuration. All other options must be specified in code.
+
+## Proxies/load balancers
+
+If your website is hosted behind a proxy/load balancer e.g. Azure FrontDoor, you may need to configure the middleware to use the X-Forwarded-Host header
+to present the correct host values to the DomainSpecificStaticFiles middleware.
+
+Configure the middleware to use the X-Forwarded-Host header by adding the following code:
+```
+// Configure headers that are forwarded
+builder.Services.Configure<ForwardedHeadersOptions>(
+	options =>
+	{
+		options.ForwardedHeaders =
+				ForwardedHeaders.XForwardedFor
+				| ForwardedHeaders.XForwardedProto
+				| ForwardedHeaders.XForwardedHost;
+		// Need to clear out restrictions, (FrontDoor overrides the value of x-forwarded-host if one was)
+		// provided explicitly by the client
+		// https://learn.microsoft.com/en-us/azure/frontdoor/front-door-http-headers-protocol#from-the-front-door-to-the-backend
+		// https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-7.0#configuration-for-a-proxy-that-uses-different-header-names
+		options.KnownNetworks.Clear();
+		options.KnownProxies.Clear();
+
+		// This will restrict the allowed values coming in through the x-forwarded-host header
+		//options.AllowedHosts = new List<string>() { "yourallowed.domain.name" };
+	});
+
+...
+```
+Then add the a call to `app.UseForwardedHeaders()` e.g.
+```
+// This allows the host to be set from the x-forwarded-host etc so we can see the original host after
+// coming through the proxy and arriving at the application
+// Place this code before you need to access the host header, e.g. before app.UseHsts
+app.UseForwardedHeaders();
+
+if (app.Environment.IsDevelopment())
+{
+	app.UseWebAssemblyDebugging();
+}
+else
+{
+	_ = app.UseExceptionHandler("/Error");
+	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+	_ = app.UseHsts();
+}
+
+```
