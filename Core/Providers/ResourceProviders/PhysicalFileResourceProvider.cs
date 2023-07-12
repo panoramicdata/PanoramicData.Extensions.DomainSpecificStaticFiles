@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Providers.ResourceProviders;
 
 /// <summary>
 /// A resource provider that is used to interact with physical files on disk

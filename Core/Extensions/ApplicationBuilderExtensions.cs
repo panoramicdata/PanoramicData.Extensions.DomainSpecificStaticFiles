@@ -1,4 +1,5 @@
 ﻿using PanoramicData.Extensions.DomainSpecificStaticFiles;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Interfaces;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +16,12 @@ public static class ApplicationBuilderExtensions
 	public static IApplicationBuilder UseDomainSpecificStaticFiles(this IApplicationBuilder app)
 	{
 		_ = app.UseMiddleware<DomainSpecificStaticFileMiddleware>();
+
+		// Wire up starting async initialization of the configuration provider once the application has finished starting
+		var hostLifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime>();
+		var configurationProvider = app.ApplicationServices.GetRequiredService<IMappingConfigurationProvider>();
+		var token = hostLifetime.ApplicationStarted;
+		token.Register(configurationProvider.StartInitialization);
 
 		return app;
 	}

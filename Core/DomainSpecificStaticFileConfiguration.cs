@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using PanoramicData.Extensions.DomainSpecificStaticFiles.Providers.ResourceProviders;
+using System.Collections.Concurrent;
 
 namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 

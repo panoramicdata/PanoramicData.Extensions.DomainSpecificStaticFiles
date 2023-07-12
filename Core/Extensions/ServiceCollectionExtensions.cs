@@ -1,4 +1,6 @@
 ﻿using PanoramicData.Extensions.DomainSpecificStaticFiles;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Interfaces;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Providers.MappingConfigurationProviders;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -30,20 +32,51 @@ public static class ServiceCollectionExtensions
 			options.RequestMappings = overrideOptions.RequestMappings;
 		}
 
-		// Translate the options provided by the developer into perf-optimised runtime configuration
-		var runtimeConfig = DomainSpecificStaticFileOptionsTranslator.Translate(options);
-
-		_ = services.AddSingleton(runtimeConfig);
-		_ = services.AddTransient(CreateResourceProvider);
-		_ = services.AddTransient<DomainSpecificStaticFileMiddleware>();
-		_ = services.AddTransient<DomainSpecificStaticFileRequestHandler>();
+		_ = services.AddSingleton<IMappingConfigurationProvider>(new StaticMappingConfigurationProvider(options));
+		RegisterDefaultServices(services);
 
 		return services;
 	}
 
+	/// <summary>
+	/// Add the types necessary to serve static domain-specific files
+	/// </summary>
+	/// <param name="services">The service collection instance on which we are to operate</param>
+	/// <param name="action">The configuration action to be performed to create the configuration options once the system is started</param>
+	/// <returns>The instance being extended, to support method chaining</returns>
+	public static IServiceCollection AddDomainSpecificStaticFiles(this IServiceCollection services, Func<Task<DomainSpecificStaticFileOptions>> action)
+	{
+		_ = services.AddSingleton<IMappingConfigurationProvider>(new DeferredMappingConfigurationProvider(action));
+		RegisterDefaultServices(services);
+
+		return services;
+	}
+
+	/// <summary>
+	/// Add the types necessary to serve static domain-specific files
+	/// </summary>
+	/// <param name="services">The service collection instance on which we are to operate</param>
+	/// <param name="mappingConfigurationProvider">The async configuration provider to be used to get the configuration options</param>
+	/// <returns>The instance being extended, to support method chaining</returns>
+	public static IServiceCollection AddDomainSpecificStaticFiles(this IServiceCollection services, MappingConfigurationProviderBase mappingConfigurationProvider)
+	{
+		_ = services.AddSingleton<IMappingConfigurationProvider>(mappingConfigurationProvider);
+		RegisterDefaultServices(services);
+
+		return services;
+	}
+
+	private static void RegisterDefaultServices(IServiceCollection services)
+	{
+		_ = services.AddTransient(CreateResourceProvider);
+		_ = services.AddTransient<DomainSpecificStaticFileMiddleware>();
+		_ = services.AddTransient<DomainSpecificStaticFileRequestHandler>();
+	}
+
 	private static IResourceProvider CreateResourceProvider(IServiceProvider serviceProvider)
 	{
-		var configuration = serviceProvider.GetRequiredService<DomainSpecificStaticFileConfiguration>();
+		var configurationProvider = serviceProvider.GetRequiredService<IMappingConfigurationProvider>();
+		var configuration = configurationProvider.GetConfiguration();
 		return (IResourceProvider)ActivatorUtilities.CreateInstance(serviceProvider, configuration.ResourceProviderType);
 	}
 }

@@ -1,4 +1,6 @@
-﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
+﻿using PanoramicData.Extensions.DomainSpecificStaticFiles.Interfaces;
+
+namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
 /// <summary>
 /// The middleware for serving domain-specific static files
@@ -6,13 +8,13 @@
 internal class DomainSpecificStaticFileMiddleware : IMiddleware
 {
 	private readonly DomainSpecificStaticFileRequestHandler _handler;
-	private readonly DomainSpecificStaticFileConfiguration _configuration;
+	private readonly IMappingConfigurationProvider _mappingConfigurationProvider;
 	private readonly ILogger<DomainSpecificStaticFileMiddleware> _logger;
 
-	public DomainSpecificStaticFileMiddleware(DomainSpecificStaticFileRequestHandler handler, DomainSpecificStaticFileConfiguration configuration, ILogger<DomainSpecificStaticFileMiddleware> logger)
+	public DomainSpecificStaticFileMiddleware(DomainSpecificStaticFileRequestHandler handler, IMappingConfigurationProvider mappingConfigurationProvider, ILogger<DomainSpecificStaticFileMiddleware> logger)
 	{
 		_handler = handler;
-		_configuration = configuration;
+		_mappingConfigurationProvider = mappingConfigurationProvider;
 		_logger = logger;
 	}
 
@@ -26,7 +28,8 @@ internal class DomainSpecificStaticFileMiddleware : IMiddleware
 		ArgumentNullException.ThrowIfNull(context, nameof(context));
 		ArgumentNullException.ThrowIfNull(next, nameof(next));
 
-		var interceptionContext = new InterceptionContext(context, _configuration);
+		var configuration = _mappingConfigurationProvider.GetConfiguration();
+		var interceptionContext = new InterceptionContext(context, configuration);
 		if (interceptionContext.CanInterceptRequest)
 		{
 			// This is a request that we are supposed to intercept

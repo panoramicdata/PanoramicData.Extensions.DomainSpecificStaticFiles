@@ -1,4 +1,5 @@
 ﻿using PanoramicData.Extensions.DomainSpecificStaticFiles.Caching;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Providers.ResourceProviders;
 
 namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
