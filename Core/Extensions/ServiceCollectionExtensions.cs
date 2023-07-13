@@ -10,7 +10,8 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class ServiceCollectionExtensions
 {
 	/// <summary>
-	/// Add the types necessary to serve static domain-specific files
+	/// Add the types necessary to serve domain-specific static files, 
+	/// using static mapping configuration supplied at the time of registration
 	/// </summary>
 	/// <param name="services">The service collection instance on which we are to operate</param>
 	/// <param name="config">The configuration action to be applied to the options that are to be used for serving resources</param>
@@ -39,12 +40,13 @@ public static class ServiceCollectionExtensions
 	}
 
 	/// <summary>
-	/// Add the types necessary to serve static domain-specific files
+	/// Add the types necessary to serve domain-specific static files, 
+	/// using configuration loaded via a delegate after system startup
 	/// </summary>
 	/// <param name="services">The service collection instance on which we are to operate</param>
 	/// <param name="action">The configuration action to be performed to create the configuration options once the system is started</param>
 	/// <returns>The instance being extended, to support method chaining</returns>
-	public static IServiceCollection AddDomainSpecificStaticFiles(this IServiceCollection services, Func<Task<DomainSpecificStaticFileOptions>> action)
+	public static IServiceCollection AddDomainSpecificStaticFiles(this IServiceCollection services, Func<IServiceScopeFactory, Task<DomainSpecificStaticFileOptions>> action)
 	{
 		_ = services.AddSingleton<IMappingConfigurationProvider>(new DeferredMappingConfigurationProvider(action));
 		RegisterDefaultServices(services);
@@ -53,7 +55,8 @@ public static class ServiceCollectionExtensions
 	}
 
 	/// <summary>
-	/// Add the types necessary to serve static domain-specific files
+	/// Add the types necessary to serve domain-specific static files, 
+	/// using mapping configuration loaded by the supplied provider
 	/// </summary>
 	/// <param name="services">The service collection instance on which we are to operate</param>
 	/// <param name="mappingConfigurationProvider">The async configuration provider to be used to get the configuration options</param>
@@ -61,6 +64,21 @@ public static class ServiceCollectionExtensions
 	public static IServiceCollection AddDomainSpecificStaticFiles(this IServiceCollection services, MappingConfigurationProviderBase mappingConfigurationProvider)
 	{
 		_ = services.AddSingleton<IMappingConfigurationProvider>(mappingConfigurationProvider);
+		RegisterDefaultServices(services);
+
+		return services;
+	}
+
+	/// <summary>
+	/// Add the types necessary to serve domain-specific static files, 
+	/// using mapping configuration loaded from an instance of the supplied provider type
+	/// </summary>
+	/// <typeparam name="TMappingProvider">The type of the mapping configuration provider to be used to load configuration</typeparam>
+	/// <param name="services">The service collection instance on which we are to operate</param>
+	/// <returns>The instance being extended, to support method chaining</returns>
+	public static IServiceCollection AddDomainSpecificStaticFiles<TMappingProvider>(this IServiceCollection services) where TMappingProvider : MappingConfigurationProviderBase
+	{
+		_ = services.AddSingleton<IMappingConfigurationProvider, TMappingProvider>();
 		RegisterDefaultServices(services);
 
 		return services;
@@ -75,6 +93,7 @@ public static class ServiceCollectionExtensions
 		_ = services.AddTransient(CreateResourceProvider);
 		_ = services.AddTransient<DomainSpecificStaticFileMiddleware>();
 		_ = services.AddTransient<DomainSpecificStaticFileRequestHandler>();
+		_ = services.AddSingleton<MappingConfigurationProviderInitializer>();
 	}
 
 	/// <summary>

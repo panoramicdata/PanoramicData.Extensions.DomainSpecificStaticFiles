@@ -26,7 +26,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
 		<!-- Update the following before releasing to nuget -->
-		<PackageReleaseNotes>Expanded the options available for loading mapping configuration.</PackageReleaseNotes>
+		<PackageReleaseNotes>Added the ability to resolve dependencies in mapping configuration providers.</PackageReleaseNotes>
 
 	</PropertyGroup>
 

@@ -1,5 +1,5 @@
 ﻿using PanoramicData.Extensions.DomainSpecificStaticFiles;
-using PanoramicData.Extensions.DomainSpecificStaticFiles.Interfaces;
+using PanoramicData.Extensions.DomainSpecificStaticFiles.Providers.MappingConfigurationProviders;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -19,7 +19,7 @@ public static class ApplicationBuilderExtensions
 
 		// Wire up starting async initialization of the configuration provider once the application has finished starting
 		var hostLifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime>();
-		var configurationProvider = app.ApplicationServices.GetRequiredService<IMappingConfigurationProvider>();
+		var configurationProvider = app.ApplicationServices.GetRequiredService<MappingConfigurationProviderInitializer>();
 		var token = hostLifetime.ApplicationStarted;
 		token.Register(configurationProvider.StartInitialization);
 

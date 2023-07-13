@@ -8,12 +8,13 @@ namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Providers.MappingCo
 /// </summary>
 public class RefreshingMappingConfigurationProvider : MappingConfigurationProviderBase
 {
-	private readonly Func<CancellationToken, Task<DomainSpecificStaticFileOptions>> _retrievalTask;
+	private readonly Func<IServiceScopeFactory, CancellationToken, Task<DomainSpecificStaticFileOptions>> _retrievalTask;
 	private readonly TimeSpan _refreshInterval;
 	private readonly IHostApplicationLifetime _hostApplicationLifetime;
+	private IServiceScopeFactory? _scopeFactory;
 	private CancellationTokenSource? _cancellationTokenSource;
 
-	public RefreshingMappingConfigurationProvider(Func<CancellationToken, Task<DomainSpecificStaticFileOptions>> retrievalTask, TimeSpan refreshInterval, IHostApplicationLifetime hostApplicationLifetime)
+	public RefreshingMappingConfigurationProvider(Func<IServiceScopeFactory, CancellationToken, Task<DomainSpecificStaticFileOptions>> retrievalTask, TimeSpan refreshInterval, IHostApplicationLifetime hostApplicationLifetime)
 	{
 		_retrievalTask = retrievalTask;
 		_refreshInterval = refreshInterval;
@@ -28,14 +29,15 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 	/// <summary>
 	/// Async initializer, which makes use of the provided task to get the configuration options
 	/// </summary>
-	protected override async Task InitializeAsync()
+	protected override async Task InitializeAsync(IServiceScopeFactory scopeFactory)
 	{
+		_scopeFactory = scopeFactory;
 		_cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_hostApplicationLifetime.ApplicationStopping);
 
 		TimeSpan timeTaken;
 		try
 		{
-			timeTaken = await RetrieveAsync(_cancellationTokenSource.Token);
+			timeTaken = await RetrieveAsync(_scopeFactory, _cancellationTokenSource.Token);
 		}
 		catch (TaskCanceledException)
 		{
@@ -46,11 +48,17 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 		_ = RunRefreshAsync(timeTaken);
 	}
 
-	private async Task<TimeSpan> RetrieveAsync(CancellationToken cancellationToken)
+	private async Task<TimeSpan> RetrieveAsync(IServiceScopeFactory scopeFactory, CancellationToken cancellationToken)
 	{
+		if (_scopeFactory is null)
+		{
+			// Initialization is not yet done; we can do no work here
+			return TimeSpan.Zero;
+		}
+
 		var startTimestamp = Stopwatch.GetTimestamp();
 
-		var options = await _retrievalTask(cancellationToken);
+		var options = await _retrievalTask(scopeFactory, cancellationToken);
 		ApplyConfiguration(options);
 
 		return Stopwatch.GetElapsedTime(startTimestamp);
@@ -58,6 +66,11 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 
 	private async Task RunRefreshAsync(TimeSpan timeTaken)
 	{
+		if (_scopeFactory is null)
+		{
+			// Initialization has not completed, so we cannot refresh
+			return;
+		}
 
 		try
 		{
@@ -65,12 +78,18 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 			while (!cancellationToken.IsCancellationRequested)
 			{
 				await DelayUntilNextRefresh(timeTaken, cancellationToken);
-				timeTaken = await RetrieveAsync(cancellationToken);
+				timeTaken = await RetrieveAsync(_scopeFactory, cancellationToken);
 			}
 		}
 		catch (TaskCanceledException)
 		{
 			// No need to do anything; cancellation is intentionally supported
+		}
+		catch (Exception ex)
+		{
+			using var scope = _scopeFactory.CreateScope();
+			var logger = scope.ServiceProvider.GetRequiredService<ILogger<RefreshingMappingConfigurationProvider>>();
+			logger.LogError(ex, "Exception during mapping configuration retrieval. Message: {Message}", ex.Message);
 		}
 	}
 

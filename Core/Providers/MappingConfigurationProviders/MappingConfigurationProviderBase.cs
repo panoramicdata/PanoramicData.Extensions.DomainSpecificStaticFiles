@@ -4,32 +4,33 @@ namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Providers.MappingCo
 
 public abstract class MappingConfigurationProviderBase : IMappingConfigurationProvider, IDisposable
 {
-	private readonly Task _initializationTask;
 	private readonly object _updateLock = new();
+	private Task? _initializationTask;
 	private DomainSpecificStaticFileConfiguration _configuration = new();
 	private bool _configurationApplied;
-
-	public MappingConfigurationProviderBase()
-	{
-		// Set up for async initialization, but don't start the operation yet
-		_initializationTask = new Task(async () => await InitializeAsync());
-		_initializationTask.ContinueWith(InitializationCompletedHandler);
-	}
 
 	/// <summary>
 	/// Start async initialization of configuration
 	/// </summary>
-	public void StartInitialization()
-		=> _initializationTask.Start();
+	public void StartInitialization(IServiceScopeFactory scopeFactory)
+	{
+		// Set up for async initialization, but don't start the operation yet
+		_initializationTask = new Task(async () => await InitializeAsync(scopeFactory))
+			.ContinueWith(InitializationCompletedHandler);
+
+		// All set up; now start the operation; it will continue after we return
+		_initializationTask.Start();
+	}
 
 	/// <summary>
 	/// Method to be implemented by a provider to asynchronously initialize the configuration
 	/// </summary>
+	/// <param name="scopeFactory">A service scope factory that can be used to start a service scope, if needed</param>
 	/// <remarks>
 	/// The implementer MUST call ApplyConfiguration to provide the options to the 
 	/// underlying system before the completion of the initialization operation.
 	/// </remarks>
-	protected abstract Task InitializeAsync();
+	protected abstract Task InitializeAsync(IServiceScopeFactory scopeFactory);
 
 	/// <summary>
 	/// Handler that is run when async initialization has been completed
@@ -73,7 +74,7 @@ public abstract class MappingConfigurationProviderBase : IMappingConfigurationPr
 
 	public void Dispose()
 	{
-		_initializationTask.Dispose();
+		_initializationTask?.Dispose();
 		GC.SuppressFinalize(this);
 	}
 }

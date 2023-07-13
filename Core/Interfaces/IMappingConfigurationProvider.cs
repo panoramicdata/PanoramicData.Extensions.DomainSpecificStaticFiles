@@ -2,7 +2,7 @@
 
 internal interface IMappingConfigurationProvider
 {
-	void StartInitialization();
+	void StartInitialization(IServiceScopeFactory scopeFactory);
 
 	DomainSpecificStaticFileConfiguration GetConfiguration();
 }

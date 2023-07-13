@@ -14,7 +14,7 @@ internal class StaticMappingConfigurationProvider : IMappingConfigurationProvide
 		_configuration = DomainSpecificStaticFileOptionsTranslator.Translate(options);
 	}
 
-	void IMappingConfigurationProvider.StartInitialization()
+	void IMappingConfigurationProvider.StartInitialization(IServiceScopeFactory scopeFactory)
 	{
 		// There is no initialization to be performed for this provider
 	}
