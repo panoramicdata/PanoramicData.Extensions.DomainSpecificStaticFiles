@@ -51,6 +51,8 @@ public abstract class MappingConfigurationProviderBase : IMappingConfigurationPr
 	/// <param name="options">The configuration options to be applied</param>
 	protected void ApplyConfiguration(DomainSpecificStaticFileOptions options)
 	{
+		ArgumentNullException.ThrowIfNull(options, nameof(options));
+
 		// Translate the options provided by the developer into perf-optimised runtime configuration
 		var configuration = DomainSpecificStaticFileOptionsTranslator.Translate(options);
 

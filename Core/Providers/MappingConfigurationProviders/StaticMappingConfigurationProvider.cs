@@ -2,6 +2,9 @@
 
 namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Providers.MappingConfigurationProviders;
 
+/// <summary>
+/// Simple mapping configuration provider for serving static config provided in code
+/// </summary>
 internal class StaticMappingConfigurationProvider : IMappingConfigurationProvider
 {
 	private readonly DomainSpecificStaticFileConfiguration _configuration;

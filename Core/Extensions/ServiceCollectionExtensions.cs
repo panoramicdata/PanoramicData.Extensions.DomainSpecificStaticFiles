@@ -66,6 +66,10 @@ public static class ServiceCollectionExtensions
 		return services;
 	}
 
+	/// <summary>
+	/// Register all of the services needed for all scenarios
+	/// </summary>
+	/// <param name="services">The service collection into which to register the services</param>
 	private static void RegisterDefaultServices(IServiceCollection services)
 	{
 		_ = services.AddTransient(CreateResourceProvider);
@@ -73,6 +77,11 @@ public static class ServiceCollectionExtensions
 		_ = services.AddTransient<DomainSpecificStaticFileRequestHandler>();
 	}
 
+	/// <summary>
+	/// Create a resource provider on request
+	/// </summary>
+	/// <param name="serviceProvider">The service provider from which to obtain services</param>
+	/// <returns>An instance of the resource provider to be used for accessing static resources</returns>
 	private static IResourceProvider CreateResourceProvider(IServiceProvider serviceProvider)
 	{
 		var configurationProvider = serviceProvider.GetRequiredService<IMappingConfigurationProvider>();
