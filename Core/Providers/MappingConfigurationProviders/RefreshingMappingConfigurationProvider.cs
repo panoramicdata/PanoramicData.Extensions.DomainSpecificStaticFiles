@@ -6,13 +6,13 @@ namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Providers.MappingCo
 /// Refreshing mapping configuration provider, which enables the running of an async
 /// task to get the configuration options on a regular schedule, including at initialization
 /// </summary>
-public class RefreshingMappingConfigurationProvider : MappingConfigurationProviderBase
+public class RefreshingMappingConfigurationProvider : MappingConfigurationProviderBase, IDisposable
 {
 	private readonly Func<IServiceScopeFactory, CancellationToken, Task<DomainSpecificStaticFileOptions>> _retrievalTask;
 	private readonly TimeSpan _refreshInterval;
 	private readonly IHostApplicationLifetime _hostApplicationLifetime;
 	private IServiceScopeFactory? _scopeFactory;
-	private CancellationTokenSource? _cancellationTokenSource;
+	private CancellationToken _lifetimeCancellationToken = new CancellationTokenSource().Token;
 
 	public RefreshingMappingConfigurationProvider(Func<IServiceScopeFactory, CancellationToken, Task<DomainSpecificStaticFileOptions>> retrievalTask, TimeSpan refreshInterval, IHostApplicationLifetime hostApplicationLifetime)
 	{
@@ -32,19 +32,27 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 	protected override async Task InitializeAsync(IServiceScopeFactory scopeFactory)
 	{
 		_scopeFactory = scopeFactory;
-		_cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_hostApplicationLifetime.ApplicationStopping);
+		_lifetimeCancellationToken = _hostApplicationLifetime.ApplicationStopping;
 
-		TimeSpan timeTaken;
+		var startTimestamp = Stopwatch.GetTimestamp();
 		try
 		{
-			timeTaken = await RetrieveAsync(_scopeFactory, _cancellationTokenSource.Token);
+			_ = await RetrieveAsync(_scopeFactory, _lifetimeCancellationToken);
 		}
 		catch (TaskCanceledException)
 		{
 			return;
 		}
+		catch (Exception ex)
+		{
+			LogException(ex);
+			// Apply an empty options class so that we have applied something; this is a requirement
+			// of the base class on which we are built, to prove we are using it correctly
+			ApplyConfiguration(new DomainSpecificStaticFileOptions());
+		}
 
 		// Start the process of performing regular refreshes
+		var timeTaken = Stopwatch.GetElapsedTime(startTimestamp);
 		_ = RunRefreshAsync(timeTaken);
 	}
 
@@ -72,28 +80,25 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 			return;
 		}
 
-		try
+		while (!_lifetimeCancellationToken.IsCancellationRequested)
 		{
-			var cancellationToken = _cancellationTokenSource!.Token;
-			while (!cancellationToken.IsCancellationRequested)
+			try
 			{
-				await DelayUntilNextRefresh(timeTaken, cancellationToken);
-				timeTaken = await RetrieveAsync(_scopeFactory, cancellationToken);
+				await DelayUntilNextRefreshAsync(timeTaken, _lifetimeCancellationToken);
+				timeTaken = await RetrieveAsync(_scopeFactory, _lifetimeCancellationToken);
 			}
-		}
-		catch (TaskCanceledException)
-		{
-			// No need to do anything; cancellation is intentionally supported
-		}
-		catch (Exception ex)
-		{
-			using var scope = _scopeFactory.CreateScope();
-			var logger = scope.ServiceProvider.GetRequiredService<ILogger<RefreshingMappingConfigurationProvider>>();
-			logger.LogError(ex, "Exception during mapping configuration retrieval. Message: {Message}", ex.Message);
+			catch (TaskCanceledException)
+			{
+				return;
+			}
+			catch (Exception ex)
+			{
+				LogException(ex);
+			}
 		}
 	}
 
-	private async Task DelayUntilNextRefresh(TimeSpan timeTaken, CancellationToken cancellationToken)
+	private async Task DelayUntilNextRefreshAsync(TimeSpan timeTaken, CancellationToken cancellationToken)
 	{
 		var delayPeriod = _refreshInterval;
 		if (timeTaken < _refreshInterval)
@@ -101,6 +106,13 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 			delayPeriod = _refreshInterval - timeTaken;
 		}
 
-		await Task.Delay(delayPeriod, cancellationToken);
+		try
+		{
+			await Task.Delay(delayPeriod, cancellationToken);
+		}
+		catch (TaskCanceledException)
+		{
+			// No need to do anything; cancellation is supported behaviour
+		}
 	}
 }

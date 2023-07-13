@@ -6,6 +6,7 @@ public abstract class MappingConfigurationProviderBase : IMappingConfigurationPr
 {
 	private readonly object _updateLock = new();
 	private Task? _initializationTask;
+	private IServiceScopeFactory? _scopeFactory;
 	private DomainSpecificStaticFileConfiguration _configuration = new();
 	private bool _configurationApplied;
 
@@ -14,9 +15,11 @@ public abstract class MappingConfigurationProviderBase : IMappingConfigurationPr
 	/// </summary>
 	public void StartInitialization(IServiceScopeFactory scopeFactory)
 	{
+		_scopeFactory = scopeFactory;
+
 		// Set up for async initialization, but don't start the operation yet
-		_initializationTask = new Task(async () => await InitializeAsync(scopeFactory))
-			.ContinueWith(InitializationCompletedHandler);
+		_initializationTask = new Task(async () => await InitializeAsync(scopeFactory));
+		_initializationTask.ContinueWith(InitializationCompletedHandler);
 
 		// All set up; now start the operation; it will continue after we return
 		_initializationTask.Start();
@@ -71,6 +74,23 @@ public abstract class MappingConfigurationProviderBase : IMappingConfigurationPr
 	/// <returns>The current configuration, as it exists</returns>
 	DomainSpecificStaticFileConfiguration IMappingConfigurationProvider.GetConfiguration()
 		=> _configuration;
+
+	/// <summary>
+	/// Handle logging of an exception, if logging has been enabled
+	/// </summary>
+	/// <param name="ex">The exception that is to be logged</param>
+	/// <param name="scopeFactory">The service scope factory from which the </param>
+	protected void LogException(Exception ex)
+	{
+		if (_scopeFactory is null)
+		{
+			return;
+		}
+
+		using var scope = _scopeFactory.CreateScope();
+		var logger = scope.ServiceProvider.GetService<ILogger<RefreshingMappingConfigurationProvider>>();
+		logger?.LogError(ex, "Exception during mapping configuration retrieval. Message: {Message}", ex.Message);
+	}
 
 	public void Dispose()
 	{

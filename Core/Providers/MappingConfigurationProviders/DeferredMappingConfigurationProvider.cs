@@ -18,7 +18,17 @@ internal class DeferredMappingConfigurationProvider : MappingConfigurationProvid
 	/// </summary>
 	protected override async Task InitializeAsync(IServiceScopeFactory scopeFactory)
 	{
-		var options = await _initializationTask(scopeFactory);
-		ApplyConfiguration(options);
+		DomainSpecificStaticFileOptions? options = null;
+
+		try
+		{
+			options = await _initializationTask(scopeFactory);
+		}
+		catch (Exception ex)
+		{
+			LogException(ex);
+		}
+
+		ApplyConfiguration(options ?? new DomainSpecificStaticFileOptions());
 	}
 }
