@@ -10,19 +10,54 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 {
 	private readonly Func<IServiceScopeFactory, CancellationToken, Task<DomainSpecificStaticFileOptions>> _retrievalTask;
 	private readonly TimeSpan _refreshInterval;
+	private readonly TimeSpan _failedRefreshInterval;
 	private readonly IHostApplicationLifetime _hostApplicationLifetime;
 	private IServiceScopeFactory? _scopeFactory;
 	private CancellationToken _lifetimeCancellationToken = new CancellationTokenSource().Token;
 
-	public RefreshingMappingConfigurationProvider(Func<IServiceScopeFactory, CancellationToken, Task<DomainSpecificStaticFileOptions>> retrievalTask, TimeSpan refreshInterval, IHostApplicationLifetime hostApplicationLifetime)
+	/// <summary>
+	/// A simple constructor for the refreshing provider
+	/// </summary>
+	/// <param name="retrievalTask">The task that is to be performed to retrieve the configuration</param>
+	/// <param name="refreshInterval">The interval at which we want to retrieve the latest data</param>
+	/// <param name="hostApplicationLifetime">The lifetime of the host, from which we manage our own lifetime</param>
+	/// <exception cref="ArgumentOutOfRangeException">The refresh interval is shorter than permitted</exception>
+	/// <remarks>Using this overload results in a retry interval of 30 seconds, used when the retrieval task fails</remarks>
+	public RefreshingMappingConfigurationProvider(Func<IServiceScopeFactory, CancellationToken,
+		Task<DomainSpecificStaticFileOptions>> retrievalTask,
+		TimeSpan refreshInterval,
+		IHostApplicationLifetime hostApplicationLifetime) : this(retrievalTask, refreshInterval, TimeSpan.FromSeconds(30), hostApplicationLifetime)
+	{
+		// All work is delegated to the main constructor
+	}
+
+	/// <summary>
+	/// The main constructor for the refreshing provider
+	/// </summary>
+	/// <param name="retrievalTask">The task that is to be performed to retrieve the configuration</param>
+	/// <param name="refreshInterval">The interval at which we want to retrieve the latest data</param>
+	/// <param name="retryInterval">The interval after which to retry a failed retrieval</param>
+	/// <param name="hostApplicationLifetime">The lifetime of the host, from which we manage our own lifetime</param>
+	/// <exception cref="ArgumentOutOfRangeException">The refresh or retry intervals are shorter than permitted</exception>
+	public RefreshingMappingConfigurationProvider(Func<IServiceScopeFactory, CancellationToken,
+		Task<DomainSpecificStaticFileOptions>> retrievalTask,
+		TimeSpan refreshInterval,
+		TimeSpan retryInterval,
+		IHostApplicationLifetime hostApplicationLifetime)
 	{
 		_retrievalTask = retrievalTask;
 		_refreshInterval = refreshInterval;
+		_failedRefreshInterval = retryInterval;
 		_hostApplicationLifetime = hostApplicationLifetime;
 
-		if (refreshInterval < TimeSpan.FromMinutes(1))
+		if (refreshInterval < TimeSpan.FromSeconds(15))
 		{
-			throw new ArgumentOutOfRangeException(nameof(refreshInterval), "Refreshing more frequently than every minute is not supported!");
+			throw new ArgumentOutOfRangeException(nameof(refreshInterval), "Refreshing more frequently than every 15 seconds is not supported!");
+		}
+
+		if (retryInterval < TimeSpan.FromSeconds(5))
+		{
+			throw new ArgumentOutOfRangeException(nameof(refreshInterval), "Retrying a failed operation more frequently than every 5 seconds is not supported!");
 		}
 	}
 
@@ -56,6 +91,12 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 		_ = RunRefreshAsync(timeTaken);
 	}
 
+	/// <summary>
+	/// The retrieval operation, which performs retrieval of the data and applies it to the base
+	/// </summary>
+	/// <param name="scopeFactory">The service scope factory that can be used to gain access to DI</param>
+	/// <param name="cancellationToken">The token used to manage cancellation</param>
+	/// <returns>The time taken to perform the retrieval operation</returns>
 	private async Task<TimeSpan> RetrieveAsync(IServiceScopeFactory scopeFactory, CancellationToken cancellationToken)
 	{
 		if (_scopeFactory is null)
@@ -72,6 +113,11 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 		return Stopwatch.GetElapsedTime(startTimestamp);
 	}
 
+	/// <summary>
+	/// The refresh loop, which manages the running of the retrieval process
+	/// to the required schedule, until the host initiates shutdown
+	/// </summary>
+	/// <param name="timeTaken">The time taken to perform the initialization task</param>
 	private async Task RunRefreshAsync(TimeSpan timeTaken)
 	{
 		if (_scopeFactory is null)
@@ -80,12 +126,14 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 			return;
 		}
 
+		var operationSucceeded = true;
 		while (!_lifetimeCancellationToken.IsCancellationRequested)
 		{
 			try
 			{
-				await DelayUntilNextRefreshAsync(timeTaken, _lifetimeCancellationToken);
+				await DelayUntilNextRefreshAsync(timeTaken, operationSucceeded, _lifetimeCancellationToken);
 				timeTaken = await RetrieveAsync(_scopeFactory, _lifetimeCancellationToken);
+				operationSucceeded = true;
 			}
 			catch (TaskCanceledException)
 			{
@@ -94,16 +142,23 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 			catch (Exception ex)
 			{
 				LogException(ex);
+				operationSucceeded = false;
 			}
 		}
 	}
 
-	private async Task DelayUntilNextRefreshAsync(TimeSpan timeTaken, CancellationToken cancellationToken)
+	/// <summary>
+	/// Pause the task's execution until the next refresh is required
+	/// </summary>
+	/// <param name="timeTaken">The time taken to perform the last operation</param>
+	/// <param name="operationSucceeded">Whether the last attempt succeeded</param>
+	/// <param name="cancellationToken">The token used to manage cancellation</param>
+	private async Task DelayUntilNextRefreshAsync(TimeSpan timeTaken, bool operationSucceeded, CancellationToken cancellationToken)
 	{
-		var delayPeriod = _refreshInterval;
-		if (timeTaken < _refreshInterval)
+		var delayPeriod = operationSucceeded ? _refreshInterval : _failedRefreshInterval;
+		if (timeTaken < delayPeriod)
 		{
-			delayPeriod = _refreshInterval - timeTaken;
+			delayPeriod -= timeTaken;
 		}
 
 		try
@@ -112,7 +167,7 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 		}
 		catch (TaskCanceledException)
 		{
-			// No need to do anything; cancellation is supported behaviour
+			// No need to do anything; cancellation is a supported behaviour
 		}
 	}
 }

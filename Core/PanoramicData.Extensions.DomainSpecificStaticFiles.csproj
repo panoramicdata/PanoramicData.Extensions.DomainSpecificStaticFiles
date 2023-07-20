@@ -26,7 +26,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
 		<!-- Update the following before releasing to nuget -->
-		<PackageReleaseNotes>Added logging of exceptions raised during mapping configuration loads, where possible.</PackageReleaseNotes>
+		<PackageReleaseNotes>Added control over the period between retrieval retries in the refreshing provider, should retrieval fail.</PackageReleaseNotes>
 
 	</PropertyGroup>
 
