@@ -10,7 +10,7 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 {
 	private readonly Func<IServiceScopeFactory, CancellationToken, Task<DomainSpecificStaticFileOptions>> _retrievalTask;
 	private readonly TimeSpan _refreshInterval;
-	private readonly TimeSpan _failedRefreshInterval;
+	private readonly TimeSpan _retryInterval;
 	private readonly IHostApplicationLifetime _hostApplicationLifetime;
 	private IServiceScopeFactory? _scopeFactory;
 	private CancellationToken _lifetimeCancellationToken = new CancellationTokenSource().Token;
@@ -47,7 +47,7 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 	{
 		_retrievalTask = retrievalTask;
 		_refreshInterval = refreshInterval;
-		_failedRefreshInterval = retryInterval;
+		_retryInterval = retryInterval;
 		_hostApplicationLifetime = hostApplicationLifetime;
 
 		if (refreshInterval < TimeSpan.FromSeconds(15))
@@ -69,10 +69,12 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 		_scopeFactory = scopeFactory;
 		_lifetimeCancellationToken = _hostApplicationLifetime.ApplicationStopping;
 
+		var initializationSucceeded = false;
 		var startTimestamp = Stopwatch.GetTimestamp();
 		try
 		{
 			_ = await RetrieveAsync(_scopeFactory, _lifetimeCancellationToken);
+			initializationSucceeded = true;
 		}
 		catch (TaskCanceledException)
 		{
@@ -88,7 +90,7 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 
 		// Start the process of performing regular refreshes
 		var timeTaken = Stopwatch.GetElapsedTime(startTimestamp);
-		_ = RunRefreshAsync(timeTaken);
+		_ = RunRefreshAsync(timeTaken, initializationSucceeded);
 	}
 
 	/// <summary>
@@ -118,7 +120,8 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 	/// to the required schedule, until the host initiates shutdown
 	/// </summary>
 	/// <param name="timeTaken">The time taken to perform the initialization task</param>
-	private async Task RunRefreshAsync(TimeSpan timeTaken)
+	/// <param name="operationSucceeded">Whether the initialization operation succeeded</param>
+	private async Task RunRefreshAsync(TimeSpan timeTaken, bool operationSucceeded)
 	{
 		if (_scopeFactory is null)
 		{
@@ -126,7 +129,6 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 			return;
 		}
 
-		var operationSucceeded = true;
 		while (!_lifetimeCancellationToken.IsCancellationRequested)
 		{
 			try
@@ -155,7 +157,7 @@ public class RefreshingMappingConfigurationProvider : MappingConfigurationProvid
 	/// <param name="cancellationToken">The token used to manage cancellation</param>
 	private async Task DelayUntilNextRefreshAsync(TimeSpan timeTaken, bool operationSucceeded, CancellationToken cancellationToken)
 	{
-		var delayPeriod = operationSucceeded ? _refreshInterval : _failedRefreshInterval;
+		var delayPeriod = operationSucceeded ? _refreshInterval : _retryInterval;
 		if (timeTaken < delayPeriod)
 		{
 			delayPeriod -= timeTaken;
