@@ -1,20 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
+
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>7dd7c99d-7a5d-479d-9641-2554cb0c0379</UserSecretsId>
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Style\Alternative\images\favicon.png" />
   </ItemGroup>
+
   <ItemGroup>
     <Content Include="Style\Alternative\images\favicon.png" />
     <Content Include="Style\Default\images\favicon.png" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Core\PanoramicData.Extensions.DomainSpecificStaticFiles.csproj" />
   </ItemGroup>
+
 </Project>
