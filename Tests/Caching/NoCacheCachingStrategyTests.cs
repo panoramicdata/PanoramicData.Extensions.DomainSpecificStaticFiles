@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Microsoft.Extensions.Primitives;
 using PanoramicData.Extensions.DomainSpecificStaticFiles.Caching;
 using PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.Helpers;
