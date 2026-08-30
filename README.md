@@ -1,3 +1,9 @@
+[![NuGet version](https://img.shields.io/nuget/v/PanoramicData.Extensions.DomainSpecificStaticFiles.svg)](https://www.nuget.org/packages/PanoramicData.Extensions.DomainSpecificStaticFiles/)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+[![Codacy Badge](https://app.codacy.com/project/badge/grade/PanoramicData.Extensions.DomainSpecificStaticFiles)](https://app.codacy.com/gh/panoramicdata/PanoramicData.Extensions.DomainSpecificStaticFiles/dashboard)
+
 # PanoramicData.Extensions.DomainSpecificStaticFiles
 
 Middleware for serving domain-specific static files from ASP.NET Core websites, including for the purposes of white labelling sites.
