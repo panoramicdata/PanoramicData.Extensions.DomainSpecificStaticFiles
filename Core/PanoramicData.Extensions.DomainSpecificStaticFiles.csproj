@@ -1,59 +1,52 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
-	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<AnalysisLevel>latest-recommended</AnalysisLevel>
-		<OutputType>Library</OutputType>
-		<IsPackable>true</IsPackable>
-
-		<Authors>Panoramic Data Limited</Authors>
-		<Company>Panoramic Data Limited</Company>
-		<Copyright>Copyright © Panoramic Data Limited 2023</Copyright>
-		<PackageProjectUrl>https://github.com/panoramicdata/PanoramicData.Extensions.DomainSpecificStaticFiles/</PackageProjectUrl>
-		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<PackageTags>Domain Domain-specific Static Files</PackageTags>
-		<Title>PanoramicData.Extensions.DomainSpecificStaticFiles</Title>
-		<Description>A .NET package for serving domain-specific static files</Description>
-		<Summary>A .NET package that supports serving static files that vary by domain</Summary>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/panoramicdata/PanoramicData.Extensions.DomainSpecificStaticFiles/</RepositoryUrl>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-
-		<!-- Update the following before releasing to nuget -->
-		<PackageReleaseNotes>Retargeted to .NET 10.</PackageReleaseNotes>
-
-	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Nerdbank.GitVersioning" Version="3.10.94">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="SecurityCodeScan.VS2019" Version="5.6.7">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
-
-	<ItemGroup>
-		<!-- Allow test projects to see internals -->
-		<InternalsVisibleTo Include="$(AssemblyName).Tests" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="..\README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Extensions\" />
-	</ItemGroup>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
+    <Authors>Panoramic Data Limited</Authors>
+    <Company>Panoramic Data Limited</Company>
+    <Copyright>Copyright © Panoramic Data Limited 2023</Copyright>
+    <PackageProjectUrl>https://github.com/panoramicdata/PanoramicData.Extensions.DomainSpecificStaticFiles/</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>Domain Domain-specific Static Files</PackageTags>
+    <Title>PanoramicData.Extensions.DomainSpecificStaticFiles</Title>
+    <Description>A .NET package for serving domain-specific static files</Description>
+    <Summary>A .NET package that supports serving static files that vary by domain</Summary>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/panoramicdata/PanoramicData.Extensions.DomainSpecificStaticFiles/</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <!-- Update the following before releasing to nuget -->
+    <PackageReleaseNotes>Retargeted to .NET 10.</PackageReleaseNotes>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SecurityCodeScan.VS2019">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Allow test projects to see internals -->
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
 </Project>
