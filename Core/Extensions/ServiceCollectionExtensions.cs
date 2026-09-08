@@ -14,6 +14,7 @@ public static class ServiceCollectionExtensions
 	/// using static mapping configuration supplied at the time of registration
 	/// </summary>
 	/// <param name="services">The service collection instance on which we are to operate</param>
+	/// <param name="configuration">The application configuration, from which mapping overrides are read</param>
 	/// <param name="config">The configuration action to be applied to the options that are to be used for serving resources</param>
 	/// <returns>The instance being extended, to support method chaining</returns>
 	public static IServiceCollection AddDomainSpecificStaticFiles(this IServiceCollection services, IConfiguration configuration, Action<DomainSpecificStaticFileOptions> config)

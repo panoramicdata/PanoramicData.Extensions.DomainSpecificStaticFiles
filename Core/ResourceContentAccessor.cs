@@ -39,7 +39,6 @@ public class ResourceContentAccessor : IDisposable
 		=> ResourceProvider.GetResourceContentsHashAsync(ResourceInfo, cancellationToken);
 
 	/// <summary>
-	/// <summary>
 	/// Get the last modified date and time of the resource contents
 	/// </summary>
 	/// <param name="cancellationToken">The token used to manage cancellation</param>
@@ -47,6 +46,7 @@ public class ResourceContentAccessor : IDisposable
 	public Task<DateTime> GetLastModifiedAsync(CancellationToken cancellationToken)
 		=> ResourceProvider.GetResourceLastModifiedUtcAsync(ResourceInfo, cancellationToken);
 
+	/// <summary>
 	/// Perform disposal of managed resources
 	/// </summary>
 	/// <param name="disposing">Whether disposal has been initiated</param>

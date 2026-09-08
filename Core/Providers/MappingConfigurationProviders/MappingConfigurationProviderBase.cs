@@ -2,6 +2,10 @@
 
 namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Providers.MappingConfigurationProviders;
 
+/// <summary>
+/// Base class for mapping configuration providers, handling the asynchronous initialization
+/// and thread-safe replacement of the runtime configuration
+/// </summary>
 public abstract class MappingConfigurationProviderBase : IMappingConfigurationProvider, IDisposable
 {
 	private readonly object _updateLock = new();
@@ -19,7 +23,7 @@ public abstract class MappingConfigurationProviderBase : IMappingConfigurationPr
 
 		// Set up for async initialization, but don't start the operation yet
 		_initializationTask = new Task(async () => await InitializeAsync(scopeFactory));
-		_initializationTask.ContinueWith(InitializationCompletedHandler);
+		_ = _initializationTask.ContinueWith(_ => InitializationCompletedHandler(), TaskScheduler.Default);
 
 		// All set up; now start the operation; it will continue after we return
 		_initializationTask.Start();
@@ -38,9 +42,8 @@ public abstract class MappingConfigurationProviderBase : IMappingConfigurationPr
 	/// <summary>
 	/// Handler that is run when async initialization has been completed
 	/// </summary>
-	/// <param name="task">The task that was performed</param>
 	/// <exception cref="InvalidOperationException">The mapping configuration provider did not apply config during initialization</exception>
-	private void InitializationCompletedHandler(Task task)
+	private void InitializationCompletedHandler()
 	{
 		if (!_configurationApplied)
 		{
@@ -79,7 +82,6 @@ public abstract class MappingConfigurationProviderBase : IMappingConfigurationPr
 	/// Handle logging of an exception, if logging has been enabled
 	/// </summary>
 	/// <param name="ex">The exception that is to be logged</param>
-	/// <param name="scopeFactory">The service scope factory from which we can create scopes for accessing DI</param>
 	protected void LogException(Exception ex)
 	{
 		if (_scopeFactory is null)
@@ -99,6 +101,7 @@ public abstract class MappingConfigurationProviderBase : IMappingConfigurationPr
 		}
 	}
 
+	/// <inheritdoc />
 	public void Dispose()
 	{
 		_initializationTask?.Dispose();

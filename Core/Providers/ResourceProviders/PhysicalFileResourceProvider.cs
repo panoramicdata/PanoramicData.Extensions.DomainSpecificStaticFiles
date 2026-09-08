@@ -23,12 +23,17 @@ internal class PhysicalFileResourceProvider : IResourceProvider
 	/// </summary>
 	/// <param name="resourcePath">The relative path to the resource</param>
 	/// <returns>Information about the desired resource, including whether it exists</returns>
+	/// <param name="cancellationToken">The token used to manage cancellation</param>
 	public Task<ResourceInfo> GetResourceInfoAsync(string resourcePath, CancellationToken cancellationToken)
 	{
 		var fullResourcePath = GetFullFilePath(resourcePath);
 		if (!File.Exists(fullResourcePath))
 		{
-			_logger.LogInformation("Physical file provider: no file found at path '{ResourcePath}'", fullResourcePath);
+			if (_logger.IsEnabled(LogLevel.Information))
+			{
+				_logger.LogInformation("Physical file provider: no file found at path '{ResourcePath}'", fullResourcePath);
+			}
+
 			return Task.FromResult(new ResourceInfo
 			{
 				Exists = false,
@@ -50,6 +55,7 @@ internal class PhysicalFileResourceProvider : IResourceProvider
 	/// <param name="resourceInfo">The information about the resource being requested</param>
 	/// <returns>The contents of the resource</returns>
 	/// <exception cref="InvalidOperationException">The resource does not exist</exception>
+	/// <param name="cancellationToken">The token used to manage cancellation</param>
 	public Task<ResourceContentAccessor> GetResourceContentAccessorAsync(ResourceInfo resourceInfo, CancellationToken cancellationToken)
 	{
 		if (!resourceInfo.Exists)
@@ -74,6 +80,7 @@ internal class PhysicalFileResourceProvider : IResourceProvider
 	/// <param name="resourceInfo">The information about the resource being requested</param>
 	/// <returns>The contents of the resource</returns>
 	/// <exception cref="InvalidOperationException">The resource does not exist</exception>
+	/// <param name="cancellationToken">The token used to manage cancellation</param>
 	public Task<Stream> GetResourceContentStreamAsync(ResourceInfo resourceInfo, CancellationToken cancellationToken)
 		=> !resourceInfo.Exists
 			? throw new InvalidOperationException("Cannot get the contents of a resource that does not exist!")

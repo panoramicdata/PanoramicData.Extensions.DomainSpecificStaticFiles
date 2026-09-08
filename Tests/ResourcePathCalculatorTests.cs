@@ -6,148 +6,28 @@ namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests;
 
 public class ResourcePathCalculatorTests
 {
-	[Fact]
-	public void GetResourcePath_RequestUrlPrefixEndsWithForwardSlash_CalculatesCorrectPath()
+	private const string ExpectedResourcePath = "Style/Default/images/favicon.png";
+
+	/// <summary>
+	/// Leading and trailing forward slashes on either the request URL prefix or the resource path
+	/// are normalised away, so every combination resolves to the same resource path.
+	/// </summary>
+	[Theory]
+	[InlineData("localhost/style/", "Style/Default")]  // Prefix ends with a forward slash
+	[InlineData("localhost/style", "Style/Default")]   // Prefix does not end with a forward slash
+	[InlineData("localhost/style/", "/Style/Default/")] // Resource path starts and ends with a forward slash
+	[InlineData("localhost/style/", "Style/Default/")]  // Resource path ends with a forward slash only
+	public void GetResourcePath_WithVariedForwardSlashes_CalculatesCorrectPath(string requestUrlPrefix, string resourcePath)
 	{
-		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>
-			{
-				new (){
-					Domain = "localhost",
-					ResourceMapping = new ResourceMapping
-						{
-							RequestUrlPrefix = "localhost/style/",
-							ResourcePath = "Style/Default",
-							CachingPolicy = new NoCacheCachingPolicy()
-						}
-					}
-			});
+		var configuration = DomainSpecificStaticFileConfigurationFactory
+			.CreateSingleMappingConfiguration(requestUrlPrefix, resourcePath, new NoCacheCachingPolicy());
 		var interceptionContext = FakeInterceptionContextBuilder.CreateBuilder()
 			.WithConfiguration(configuration)
 			.Build();
+
 		var result = ResourcePathCalculator.GetResourcePath(interceptionContext);
 
-		result.Should().Be("Style/Default/images/favicon.png");
-	}
-
-	[Fact]
-	public void GetResourcePath_RequestUrlPrefixDoesNotEndWithForwardSlash_CalculatesCorrectPath()
-	{
-		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>
-			{
-				new (){
-					Domain = "localhost",
-					ResourceMapping = new ResourceMapping
-						{
-							RequestUrlPrefix = "localhost/style",
-							ResourcePath = "Style/Default",
-							CachingPolicy = new NoCacheCachingPolicy()
-						}
-					}
-			});
-		var interceptionContext = FakeInterceptionContextBuilder.CreateBuilder()
-			.WithConfiguration(configuration)
-			.Build();
-		var result = ResourcePathCalculator.GetResourcePath(interceptionContext);
-
-		result.Should().Be("Style/Default/images/favicon.png");
-	}
-
-	[Fact]
-	public void GetResourcePath_ResourcePathStartsAndEndsWithForwardSlash_CalculatesCorrectPath()
-	{
-		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>
-			{
-				new (){
-					Domain = "localhost",
-					ResourceMapping = new ResourceMapping
-						{
-							RequestUrlPrefix = "localhost/style/",
-							ResourcePath = "/Style/Default/",
-							CachingPolicy = new NoCacheCachingPolicy()
-						}
-					}
-			});
-		var interceptionContext = FakeInterceptionContextBuilder.CreateBuilder()
-			.WithConfiguration(configuration)
-			.Build();
-		var result = ResourcePathCalculator.GetResourcePath(interceptionContext);
-
-		result.Should().Be("Style/Default/images/favicon.png");
-	}
-
-	[Fact]
-	public void GetResourcePath_ResourcePathDoesNotStartWithForwardSlash_CalculatesCorrectPath()
-	{
-		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>
-			{
-				new (){
-					Domain = "localhost",
-					ResourceMapping = new ResourceMapping
-						{
-							RequestUrlPrefix = "localhost/style/",
-							ResourcePath = "Style/Default/",
-							CachingPolicy = new NoCacheCachingPolicy()
-						}
-					}
-			});
-		var interceptionContext = FakeInterceptionContextBuilder.CreateBuilder()
-			.WithConfiguration(configuration)
-			.Build();
-		var result = ResourcePathCalculator.GetResourcePath(interceptionContext);
-
-		result.Should().Be("Style/Default/images/favicon.png");
-	}
-
-	[Fact]
-	public void GetResourcePath_ResourcePathEndsWithForwardSlash_CalculatesCorrectPath()
-	{
-		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>
-			{
-				new (){
-					Domain = "localhost",
-					ResourceMapping = new ResourceMapping
-						{
-							RequestUrlPrefix = "localhost/style/",
-							ResourcePath = "Style/Default/",
-							CachingPolicy = new NoCacheCachingPolicy()
-						}
-					}
-			});
-		var interceptionContext = FakeInterceptionContextBuilder.CreateBuilder()
-			.WithConfiguration(configuration)
-			.Build();
-		var result = ResourcePathCalculator.GetResourcePath(interceptionContext);
-
-		result.Should().Be("Style/Default/images/favicon.png");
-	}
-
-	[Fact]
-	public void GetResourcePath_ResourcePathDoesNotEndWithForwardSlash_CalculatesCorrectPath()
-	{
-		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>
-			{
-				new (){
-					Domain = "localhost",
-					ResourceMapping = new ResourceMapping
-						{
-							RequestUrlPrefix = "localhost/style/",
-							ResourcePath = "Style/Default",
-							CachingPolicy = new NoCacheCachingPolicy()
-						}
-					}
-			});
-		var interceptionContext = FakeInterceptionContextBuilder.CreateBuilder()
-			.WithConfiguration(configuration)
-			.Build();
-		var result = ResourcePathCalculator.GetResourcePath(interceptionContext);
-
-		result.Should().Be("Style/Default/images/favicon.png");
+		result.Should().Be(ExpectedResourcePath);
 	}
 
 	[Fact]
@@ -161,23 +41,13 @@ public class ResourcePathCalculatorTests
 	[Fact]
 	public void GetResourcePath_WithNoMatchingRequestMapping_ThrowsArgumentNullException()
 	{
-		var configuration = DomainSpecificStaticFileConfigurationFactory.CreateConfiguration(
-			new List<(string Domain, ResourceMapping ResourceMapping)>
-			{
-				new (){
-					Domain = "localhost",
-					ResourceMapping = new ResourceMapping
-						{
-							RequestUrlPrefix = "localhost/style/",
-							ResourcePath = "/Style/Default/",
-							CachingPolicy = new NoCacheCachingPolicy()
-						}
-					}
-			});
+		var configuration = DomainSpecificStaticFileConfigurationFactory
+			.CreateSingleMappingConfiguration("localhost/style/", "/Style/Default/", new NoCacheCachingPolicy());
 		var interceptionContext = FakeInterceptionContextBuilder.CreateBuilder()
 			.ForRequestPath("https://localhost/index.html")
 			.WithConfiguration(configuration)
 			.Build();
+
 		var action = () => ResourcePathCalculator.GetResourcePath(interceptionContext);
 
 		action.Should().Throw<ArgumentNullException>();

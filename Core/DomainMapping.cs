@@ -2,6 +2,9 @@
 
 namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
+/// <summary>
+/// A mapping from a domain to the subpath holding that domain's resources
+/// </summary>
 public class DomainMapping
 {
 	/// <summary>

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Solution>
+  <Folder Name="/Demo/">
+    <Project Path="Demo/PanoramicData.Extensions.DomainSpecificStaticFiles.Demo.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+    <File Path="version.json" />
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="Publish.ps1" />
+    <File Path="SECURITY.md" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/PanoramicData.Extensions.DomainSpecificStaticFiles.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Tests/Benchmarks/">
+    <Project Path="Benchmarks/Benchmarks.csproj" />
+  </Folder>
+  <Project Path="Core/PanoramicData.Extensions.DomainSpecificStaticFiles.csproj" />
+</Solution>

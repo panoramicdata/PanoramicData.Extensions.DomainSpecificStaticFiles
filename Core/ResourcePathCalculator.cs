@@ -19,18 +19,18 @@ internal static class ResourcePathCalculator
 		var mapping = interceptionContext.ResourceMapping;
 
 		var subPath = requestPath[mapping.RequestUrlPrefix.Length..];
-		if (subPath.StartsWith("/", StringComparison.Ordinal))
+		if (subPath.StartsWith('/'))
 		{
 			subPath = subPath[1..];
 		}
 
 		var resourcePath = mapping.ResourcePath;
-		if (resourcePath.StartsWith("/", StringComparison.Ordinal))
+		if (resourcePath.StartsWith('/'))
 		{
 			resourcePath = resourcePath[1..];
 		}
 
-		if (!resourcePath.EndsWith("/", StringComparison.Ordinal))
+		if (!resourcePath.EndsWith('/'))
 		{
 			resourcePath += "/";
 		}

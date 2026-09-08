@@ -2,6 +2,9 @@
 
 namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
+/// <summary>
+/// A mapping from a request URL prefix to the location of the resources that serve it
+/// </summary>
 public class ResourceMapping
 {
 	/// <summary>

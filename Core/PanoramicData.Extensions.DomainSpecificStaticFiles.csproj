@@ -4,6 +4,10 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <NeutralResourcesLanguage>en</NeutralResourcesLanguage>
+    <!-- The SDK emits NeutralResourcesLanguageAttribute from NeutralLanguage, not from
+         NeutralResourcesLanguage, so both are set to keep the attribute in the assembly. -->
+    <NeutralLanguage>en</NeutralLanguage>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
@@ -21,6 +25,7 @@
     <RepositoryUrl>https://github.com/panoramicdata/PanoramicData.Extensions.DomainSpecificStaticFiles/</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>Logo.png</PackageIcon>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <!-- Update the following before releasing to nuget -->
@@ -46,6 +51,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <None Include="Logo.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />

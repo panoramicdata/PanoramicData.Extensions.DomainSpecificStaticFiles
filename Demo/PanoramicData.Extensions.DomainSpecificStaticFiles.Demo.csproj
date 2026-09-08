@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>7dd7c99d-7a5d-479d-9641-2554cb0c0379</UserSecretsId>
     <IsPackable>false</IsPackable>
+    <!-- A sample application with no published API surface, so public members are not documented. -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Style\Alternative\images\favicon.png" />

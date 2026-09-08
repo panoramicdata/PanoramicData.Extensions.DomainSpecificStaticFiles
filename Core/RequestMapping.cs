@@ -7,6 +7,9 @@ namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 /// </summary>
 public class RequestMapping
 {
+	/// <summary>
+	/// Create a new request mapping with no values provided
+	/// </summary>
 	public RequestMapping() { }
 
 	/// <summary>

@@ -58,26 +58,26 @@ internal static class DomainSpecificStaticFileOptionsTranslator
 	{
 		var combinedPath = string.Empty;
 
-		if (pathPrefix.StartsWith("/", StringComparison.Ordinal))
+		if (pathPrefix.StartsWith('/'))
 		{
 			pathPrefix = pathPrefix[1..];
 		}
 
 		combinedPath += pathPrefix;
 
-		if (!combinedPath.EndsWith("/", StringComparison.Ordinal))
+		if (!combinedPath.EndsWith('/'))
 		{
 			combinedPath += "/";
 		}
 
-		if (pathSuffix.StartsWith("/", StringComparison.Ordinal))
+		if (pathSuffix.StartsWith('/'))
 		{
 			pathSuffix = pathSuffix[1..];
 		}
 
 		combinedPath += pathSuffix;
 
-		if (!combinedPath.EndsWith("/", StringComparison.Ordinal))
+		if (!combinedPath.EndsWith('/'))
 		{
 			combinedPath += "/";
 		}

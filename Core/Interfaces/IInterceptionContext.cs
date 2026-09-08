@@ -1,5 +1,8 @@
 ﻿namespace PanoramicData.Extensions.DomainSpecificStaticFiles;
 
+/// <summary>
+/// The context of a request that the domain-specific static file middleware is handling
+/// </summary>
 public interface IInterceptionContext
 {
 	/// <summary>

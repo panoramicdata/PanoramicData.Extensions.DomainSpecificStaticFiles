@@ -18,6 +18,7 @@ internal class DomainSpecificStaticFileRequestHandler
 	/// Perform interception of a request
 	/// </summary>
 	/// <param name="interceptionContext">The context of the interception being performed</param>
+	/// <param name="cancellationToken">The token used to manage cancellation</param>
 	internal async Task InterceptRequestAsync(IInterceptionContext interceptionContext, CancellationToken cancellationToken)
 	{
 		ArgumentNullException.ThrowIfNull(interceptionContext, nameof(interceptionContext));
@@ -30,7 +31,11 @@ internal class DomainSpecificStaticFileRequestHandler
 		if (!resourceInfo.Exists)
 		{
 			// No matching resource found!
-			_logger.LogInformation("Interception of static resource request failed - {Uri} not found", interceptionContext.RequestPath);
+			if (_logger.IsEnabled(LogLevel.Information))
+			{
+				_logger.LogInformation("Interception of static resource request failed - {Uri} not found", interceptionContext.RequestPath);
+			}
+
 			interceptionContext.Response.StatusCode = StatusCodes.Status404NotFound;
 			return;
 		}
@@ -45,6 +50,7 @@ internal class DomainSpecificStaticFileRequestHandler
 	/// </summary>
 	/// <param name="interceptionContext">The context of the interception request</param>
 	/// <param name="resourceContentAccessor">The accessor used to retrieve the contents of the resource</param>
+	/// <param name="cancellationToken">The token used to manage cancellation</param>
 	private static async Task WriteResponseAsync(IInterceptionContext interceptionContext, ResourceContentAccessor resourceContentAccessor, CancellationToken cancellationToken)
 	{
 		var response = interceptionContext.Response;
@@ -69,6 +75,7 @@ internal class DomainSpecificStaticFileRequestHandler
 	/// Write the headers for the response associated with a resource
 	/// </summary>
 	/// <param name="interceptionContext">The context of the interception request</param>
+	/// <param name="resourceContentAccessor">The accessor used to retrieve the contents of the resource</param>
 	private static void WriteResponseHeaders(IInterceptionContext interceptionContext, ResourceContentAccessor resourceContentAccessor)
 	{
 		var cachingPolicy = interceptionContext.ResourceMapping!.CachingPolicy;
