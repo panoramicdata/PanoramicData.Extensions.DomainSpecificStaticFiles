@@ -8,6 +8,7 @@
     <IsPackable>false</IsPackable>
     <!-- A sample application with no published API surface, so public members are not documented. -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NeutralResourcesLanguage>en</NeutralResourcesLanguage>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Style\Alternative\images\favicon.png" />
