@@ -29,7 +29,7 @@ public static class ServiceCollectionExtensions
 
 		// Override the request mappings if any were provided in config
 		// This allows for mapping localhost to a specific domain's resources during development
-		if (overrideOptions.RequestMappings is not null && overrideOptions.RequestMappings.Any())
+		if (overrideOptions.RequestMappings is { Count: > 0 })
 		{
 			options.RequestMappings = overrideOptions.RequestMappings;
 		}
