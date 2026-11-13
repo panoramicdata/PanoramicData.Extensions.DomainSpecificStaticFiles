@@ -8,6 +8,8 @@
 
 Middleware for serving domain-specific static files from ASP.NET Core websites, including for the purposes of white labelling sites.
 
+Supports .NET 11.0.
+
 ## Usage
 
 There are two tasks to do during the startup of an ASP.NET Core site to make this middleware function as intended.
