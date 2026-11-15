@@ -21,8 +21,10 @@ public class RefreshingProviderTests
 		await using var services = new ServiceCollection().BuildServiceProvider();
 		var mappingProvider = (IMappingConfigurationProvider)provider;
 
+		var initial = mappingProvider.GetConfiguration();
 		mappingProvider.StartInitialization(services.GetRequiredService<IServiceScopeFactory>());
-		var reached = await WaitHelper.UntilAsync(() => condition(mappingProvider));
+		var reached = await WaitHelper.UntilAsync(() => condition(mappingProvider) && !ReferenceEquals(mappingProvider.GetConfiguration(), initial));
+		await Task.Delay(100, TestContext.Current.CancellationToken);
 		lifetime.StopApplication();
 
 		return reached;
