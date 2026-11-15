@@ -9,8 +9,12 @@ namespace PanoramicData.Extensions.DomainSpecificStaticFiles.Tests;
 
 public class RefreshingProviderTests
 {
-	private static Task<DomainSpecificStaticFileOptions> Retrieve(IServiceScopeFactory _, CancellationToken __)
-		=> Task.FromResult(MappedOptionsFactory.Create());
+	private static Task<DomainSpecificStaticFileOptions> Retrieve(IServiceScopeFactory scopeFactory, CancellationToken cancellationToken)
+	{
+		ArgumentNullException.ThrowIfNull(scopeFactory);
+		cancellationToken.ThrowIfCancellationRequested();
+		return Task.FromResult(MappedOptionsFactory.Create());
+	}
 
 	private static async Task<bool> InitialiseAsync(
 		Func<IServiceScopeFactory, CancellationToken, Task<DomainSpecificStaticFileOptions>> retrieval,
@@ -54,8 +58,10 @@ public class RefreshingProviderTests
 	public async Task StartInitialization_RetrievalFails_StillAttemptsRetrievalAndKeepsEmptyConfiguration()
 	{
 		var attempted = false;
-		Task<DomainSpecificStaticFileOptions> Fail(IServiceScopeFactory _, CancellationToken __)
+		Task<DomainSpecificStaticFileOptions> Fail(IServiceScopeFactory scopeFactory, CancellationToken cancellationToken)
 		{
+			ArgumentNullException.ThrowIfNull(scopeFactory);
+			cancellationToken.ThrowIfCancellationRequested();
 			attempted = true;
 			throw new InvalidOperationException("boom");
 		}

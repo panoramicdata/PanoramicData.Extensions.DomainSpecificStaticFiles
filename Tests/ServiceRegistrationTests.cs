@@ -161,6 +161,7 @@ public class ServiceRegistrationTests
 	{
 		protected override Task InitializeAsync(IServiceScopeFactory scopeFactory)
 		{
+			ArgumentNullException.ThrowIfNull(scopeFactory);
 			ApplyConfiguration(MappedOptionsFactory.Create());
 			return Task.CompletedTask;
 		}
