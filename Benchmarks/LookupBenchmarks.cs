@@ -44,30 +44,28 @@ public class LookupBenchmarks
 	{
 		var uri = new Uri(requestUrl);
 		var hash = SHA256.HashData(Encoding.UTF8.GetBytes(uri.Host.ToLowerInvariant()));
-		var lookupPath = uri.Host + "/" + uri.AbsoluteUri;
-		return _hashedMappingsDictionary.TryGetValue(hash, out var mappings)
-			? mappings.FirstOrDefault(m => lookupPath.StartsWith(uri.Host + m.RequestPathPrefix))
-			: null;
+		return Match(_hashedMappingsDictionary, hash, uri);
 	}
 
 	private RequestMapping? LookupFromCaseSensitiveDictionary(string requestUrl)
 	{
 		var uri = new Uri(requestUrl.ToLowerInvariant());
-		var lookupPath = uri.Host + "/" + uri.AbsoluteUri;
-		return _caseSensitiveMappingsDictionary.TryGetValue(uri.Host, out var mappings)
-			? mappings.FirstOrDefault(m => lookupPath.StartsWith(uri.Host + m.RequestPathPrefix))
-			: null;
+		return Match(_caseSensitiveMappingsDictionary, uri.Host, uri);
 	}
 
 	private RequestMapping? LookupFromCaseInsensitiveDictionary(string requestUrl)
 	{
 		var uri = new Uri(requestUrl);
+		return Match(_caseInsensitiveMappingsDictionary, uri.Host, uri);
+	}
+
+	private static RequestMapping? Match<TKey>(ConcurrentDictionary<TKey, List<RequestMapping>> dictionary, TKey key, Uri uri) where TKey : notnull
+	{
 		var lookupPath = uri.Host + "/" + uri.AbsoluteUri;
-		return _caseInsensitiveMappingsDictionary.TryGetValue(uri.Host, out var mappings)
+		return dictionary.TryGetValue(key, out var mappings)
 			? mappings.FirstOrDefault(m => lookupPath.StartsWith(uri.Host + m.RequestPathPrefix))
 			: null;
 	}
-
 	public RequestMapping? LookupFromList(string requestUrl)
 	{
 		var uri = new Uri(requestUrl);
@@ -77,87 +75,34 @@ public class LookupBenchmarks
 
 	#region Initialisation
 
-	private static ConcurrentDictionary<byte[], List<RequestMapping>> BuildHashedMappingsDictionary()
-	{
-		var mappings = new ConcurrentDictionary<byte[], List<RequestMapping>>();
+	private static IEnumerable<(string Host, int Index)> Hosts()
+		=> from environment in new[] { "production", "test" }
+			from index in Enumerable.Range(1, 25)
+			select ($"{environment}.domain{index}.com", index);
 
-		foreach (var environment in new List<string> { "production", "test" })
+	private static ConcurrentDictionary<TKey, List<RequestMapping>> BuildDictionary<TKey>(Func<string, TKey> toKey, IEqualityComparer<TKey>? comparer = null) where TKey : notnull
+	{
+		var mappings = new ConcurrentDictionary<TKey, List<RequestMapping>>(comparer);
+
+		foreach (var (host, index) in Hosts())
 		{
-			foreach (var index in Enumerable.Range(1, 25))
-			{
-				var hash = SHA256.HashData(Encoding.UTF8.GetBytes($"{environment}.domain{index}.com"));
-				mappings.TryAdd(hash, new List<RequestMapping>
-				{
-					new RequestMapping
-					{
-						RequestPathPrefix = "/style/",
-						ResourcePath = $"Style/Domain{index}/"
-					}
-				});
-			}
+			mappings.TryAdd(toKey(host), [new() { RequestPathPrefix = "/style/", ResourcePath = $"Style/Domain{index}/" }]);
 		}
 
 		return mappings;
 	}
+
+	private static ConcurrentDictionary<byte[], List<RequestMapping>> BuildHashedMappingsDictionary()
+		=> BuildDictionary(host => SHA256.HashData(Encoding.UTF8.GetBytes(host)));
 
 	private static ConcurrentDictionary<string, List<RequestMapping>> BuildCaseInsensitiveMappingsDictionary()
-	{
-		var mappings = new ConcurrentDictionary<string, List<RequestMapping>>(StringComparer.InvariantCultureIgnoreCase);
-
-		foreach (var environment in new List<string> { "production", "test" })
-		{
-			foreach (var index in Enumerable.Range(1, 25))
-			{
-				mappings.TryAdd($"{environment}.domain{index}.com", new List<RequestMapping>
-				{
-					new RequestMapping
-					{
-						RequestPathPrefix = "/style/",
-						ResourcePath = $"Style/Domain{index}/"
-					}
-				});
-			}
-		}
-
-		return mappings;
-	}
+		=> BuildDictionary(host => host, StringComparer.InvariantCultureIgnoreCase);
 
 	private static ConcurrentDictionary<string, List<RequestMapping>> BuildCaseSensitiveMappingsDictionary()
-	{
-		var mappings = new ConcurrentDictionary<string, List<RequestMapping>>();
-
-		foreach (var environment in new List<string> { "production", "test" })
-		{
-			foreach (var index in Enumerable.Range(1, 25))
-			{
-				mappings.TryAdd($"{environment}.domain{index}.com", new List<RequestMapping>
-				{
-					new RequestMapping
-					{
-						RequestPathPrefix = "/style/",
-						ResourcePath = $"Style/Domain{index}/"
-					}
-				});
-			}
-		}
-
-		return mappings;
-	}
+		=> BuildDictionary(host => host);
 
 	private static List<RequestMapping> BuildMappingsList()
-	{
-		var mappings = new List<RequestMapping>();
-
-		foreach (var environment in new List<string> { "production", "test" })
-		{
-			foreach (var index in Enumerable.Range(1, 25))
-			{
-				mappings.Add(new() { RequestPathPrefix = $"{environment}.domain{index}.com/style/", ResourcePath = $"/Style/Domain{index}" });
-			}
-		}
-
-		return mappings;
-	}
+		=> Hosts().Select(h => new RequestMapping { RequestPathPrefix = $"{h.Host}/style/", ResourcePath = $"/Style/Domain{h.Index}" }).ToList();
 
 	#endregion
 }
