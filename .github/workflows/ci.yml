@@ -14,7 +14,7 @@ env:
 
 jobs:
   build:
-    runs-on: [pdl-test-cluster]
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v7
@@ -45,10 +45,12 @@ jobs:
         path: ./artifacts/*.nupkg
 
   # Test coverage, uploaded to Codacy (OPS-157454).
-  # pdl-test-cluster, not a GitHub-hosted runner: this repository is private, and hosted minutes
-  # for private repositories spend a capped budget.
+  # pdl-public, not pdl-test-cluster or pdl-prod-cluster. This repository is public, so a fork pull
+  # request is untrusted code from a stranger: pdl-public is the hardened scale set that may run it
+  # (no dind, no privileged container, no hostPath). pdl-test-cluster jobs sat queued for a day.
   coverage:
-    runs-on: [pdl-test-cluster]
+    runs-on: [pdl-public]
+    timeout-minutes: 30
 
     env:
       DOTNET_NOLOGO: 1
@@ -107,7 +109,7 @@ jobs:
 
   publish:
     needs: build
-    runs-on: [pdl-test-cluster]
+    runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
       id-token: write
